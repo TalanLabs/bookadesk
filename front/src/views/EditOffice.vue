@@ -40,7 +40,7 @@
                     </div>
                 </div>
             </div>
-        <div v-if="editMode">
+        <div class="add-office-wrapper" v-if="editMode">
             Ajouter un batiment
             <div class="add-office-form">
                 <label>
@@ -78,6 +78,7 @@
     import {getOffice, saveFloorPlaces} from "@/services";
     import LabelEditor from "@/components/LabelEditor";
     import {toLowerSnakeCase} from "@/util";
+    import { uuid } from 'vue-uuid'; 
 
     export default {
         name: "EditOffice.vue",
@@ -94,7 +95,8 @@
             return {
               officeName: "",
               floorNames: [],
-                editMode: false
+              editMode: false,
+              uuid: uuid,
             };
         },
         computed: {
@@ -108,7 +110,7 @@
             ...mapActions(["fetchOffices"]),
             async addOffice () {
                 const newOffice = {
-                    id: toLowerSnakeCase(this.officeName),
+                    id: `${this.uuid.v4()}`,
                     name: this.officeName,
                     floors: []
                 };
@@ -120,7 +122,7 @@
             },
             async addFloor(officeId) {
                 const newFloor = {
-                    id: `${officeId}_floor_${this.offices.find(o => o.id === officeId).floors.length+1}`,
+                    id: `${this.uuid.v4()}`,
                     name: this.floorNames[officeId],
                     places: []
                 };
@@ -178,5 +180,9 @@
 
     .list-offices_floors:nth-child(odd) {
         background: var(--background-cards);
+    }
+
+    .add-office-wrapper {
+        margin: 1em 0;
     }
 </style>

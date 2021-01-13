@@ -6,25 +6,26 @@ import {
   DayAlreadyBookedError,
   NotAuthorizedError,
   PlaceAlreadyBookedError,
-} from "./domain/errors";
-import { confirmPresence } from "./usecase/ConfirmPresence";
-import { getOffices } from "./usecase/GetOffices";
-import { getOffice } from "./usecase/GetOffice";
-import { updatePlaces } from "./usecase/UpdatePlaces";
-import { getBookings } from "./usecase/GetBookings";
-import { Booking } from "./domain/domain";
-import { bookPlace } from "./usecase/BookPlace";
-import { Keycloak } from "keycloak-connect";
-import { BookingRepo } from "./usecase/ports/BookingRepo";
-import { OfficeRepo } from "./usecase/ports/OfficeRepo";
-import { getStats } from "./usecase/GetStats";
-import { SuppliesRepo } from "./usecase/ports/SuppliesRepo";
-import { notifyMissingSupplies } from "./usecase/NotifyMissingSupplies";
-import { getMissingSupplies } from "./usecase/GetMissingSupplies";
-import { createOrUpdateOffices } from "./usecase/CreateOrUpdateOffices";
-import { saveFloorPlan } from "./usecase/SaveFloorPlan";
-import { getFloorPlan } from "./usecase/GetFloorPlan";
-import { ImageRepo } from "./usecase/ports/ImageRepo";
+} from './domain/errors'
+import { confirmPresence } from './usecase/ConfirmPresence'
+import { getOffices } from './usecase/GetOffices'
+import { getOffice } from './usecase/GetOffice'
+import { updatePlaces } from './usecase/UpdatePlaces'
+import { getBookings } from './usecase/GetBookings'
+import { Booking } from './domain/domain'
+import { bookPlace } from './usecase/BookPlace'
+import { Keycloak } from 'keycloak-connect'
+import { BookingRepo } from './usecase/ports/BookingRepo'
+import { OfficeRepo } from './usecase/ports/OfficeRepo'
+import { getStats } from './usecase/GetStats'
+import { SuppliesRepo } from './usecase/ports/SuppliesRepo'
+import { notifyMissingSupplies } from './usecase/NotifyMissingSupplies'
+import { getMissingSupplies } from './usecase/GetMissingSupplies'
+import { createOrUpdateOffices } from './usecase/CreateOrUpdateOffices'
+import { saveFloorPlan } from './usecase/SaveFloorPlan'
+import { getFloorPlan } from './usecase/GetFloorPlan'
+import { ImageRepo } from './usecase/ports/ImageRepo'
+import { updateFloorName } from './usecase/updateFloorName'
 
 function updatePlacesController(officeRepo: OfficeRepo) {
   return async (req: any, res) => {
@@ -335,6 +336,40 @@ function fetchFloorPlan(imageRepo: ImageRepo) {
   };
 }
 
+function updateFloorNameController(officeRepo: OfficeRepo) {
+  return async (req, res) => {
+    const floorId = req.params.floorId as string
+    const officeId = req.params.officeId as string
+    const { floorName } = req.body
+    try {
+      const user = req.kauth.grant.access_token.content
+      if (!isUserAdmin(user)) {
+        return res.status(403).send({
+          code: 'NOT_AUTHORIZED',
+          message: 'Only admins can update an office',
+        })
+      }
+      if (!floorId) {
+        return res.status(400).send({
+          code: 'MISSING_PARAMETERS',
+          message: 'Missing query parameter floorId',
+        })
+      }
+      if (!officeId) {
+        return res.status(400).send({
+          code: 'MISSING_PARAMETERS',
+          message: 'Missing query parameter offcieId',
+        })
+      }
+      await updateFloorName(officeId,floorId, floorName, officeRepo)
+      return res.status(201).send()
+    } catch (e) {
+      console.error(`Failed to update floor name with floorId=${floorId}`, e)
+      return sendUnexpectedError(res)
+    }
+  }
+}
+
 export function createRoutes(
   keycloak: Keycloak,
   bookingRepo: BookingRepo,
@@ -395,6 +430,11 @@ export function createRoutes(
     // keycloak.protect(),
     fetchFloorPlan(imageRepo)
   );
+  router.put(
+    '/offices/:officeId/floors/:floorId/name',
+    keycloak.protect(),
+    updateFloorNameController(officeRepo),
+  )
   return router;
 }
 

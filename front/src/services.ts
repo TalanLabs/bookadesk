@@ -183,3 +183,18 @@ export const getFloorPlan = async (floorId: string, officeId: string) : Promise<
     throw new Error("Couldn't fetch image of plan")
   }
 }
+
+export const updateFloorName = async (
+  officeId: string,
+  floorId: string,
+  floorName: string,
+): Promise<void | Error> => {
+  try {
+    await axios.put(
+      `${apiUrl}/offices/${officeId}/floors/${floorId}/name`,
+       {floorName},
+    )
+  } catch (e) {
+    return new Error('Unexpected error')
+  }
+}
