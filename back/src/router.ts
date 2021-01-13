@@ -23,14 +23,15 @@ import { getMissingSupplies } from "./usecase/GetMissingSupplies";
 import { createOrUpdateOffices } from "./usecase/CreateOrUpdateOffices";
 import { saveFloorPlan } from "./usecase/SaveFloorPlan";
 import { getFloorPlan } from "./usecase/GetFloorPlan";
-import { updateFloorName } from "./usecase/updateFloorName";
 import { ImageRepo } from "./usecase/ports/ImageRepo";
+import { EmailGateway } from "./usecase/ports/EmailGateway";
 import { nextBookingController } from "./adapters/rest/NextBookingController";
 import { getFloorPlacesController } from "./adapters/rest/GetFloorPlacesController";
 import {
   AuthenticatedRequest,
   sendUnexpectedError
 } from "./adapters/rest/RestUtils";
+import { updateFloorName } from "./usecase/updateFloorName";
 
 function updatePlacesController(officeRepo: OfficeRepo) {
   return async (req: AuthenticatedRequest, res) => {
@@ -57,7 +58,10 @@ function updatePlacesController(officeRepo: OfficeRepo) {
   };
 }
 
-function deleteBookingController(bookingRepo: BookingRepo) {
+function deleteBookingController(
+  bookingRepo: BookingRepo,
+  emailGateway: EmailGateway
+) {
   return async (req: AuthenticatedRequest, res) => {
     try {
       const user = req.kauth.grant.access_token.content;
@@ -65,7 +69,8 @@ function deleteBookingController(bookingRepo: BookingRepo) {
         req.params.id,
         user.email,
         isUserAdmin(user),
-        bookingRepo
+        bookingRepo,
+        emailGateway
       );
       return res.status(200).send({ message: "Booking deleted" });
     } catch (error) {
@@ -358,7 +363,8 @@ export function createRoutes(
   bookingRepo: BookingRepo,
   officeRepo: OfficeRepo,
   suppliesRepo: SuppliesRepo,
-  imageRepo: ImageRepo
+  imageRepo: ImageRepo,
+  emailGateway: EmailGateway
 ): Router {
   const router = express.Router();
   router.get("/health", (req, res) => res.status(200).send("Up"));
@@ -375,7 +381,7 @@ export function createRoutes(
   router.delete(
     "/bookings/:id",
     keycloak.protect(),
-    deleteBookingController(bookingRepo)
+    deleteBookingController(bookingRepo, emailGateway)
   );
   router.post("/bookings/:id/confirm", confirmBookingController(bookingRepo));
   router.get("/offices", getOfficesController(officeRepo));
