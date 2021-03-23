@@ -25,16 +25,16 @@ export default {
   computed: {
     booking() {
       return this.$store.getters.nextBooking;
-    },
+    }
   },
   methods: {
     getFormattedDate(date) {
       const parsed = parse(date, "yyyyMMdd", Date.now());
       return format(parsed, "dd/MM/yyyy", {
-        locale: fr,
+        locale: fr
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

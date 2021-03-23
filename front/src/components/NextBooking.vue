@@ -19,13 +19,13 @@ export default {
   computed: {
     nextBooking() {
       return this.$store.getters.nextBooking;
-    },
+    }
   },
   methods: {
     getFormattedDate(date) {
       return getReadableDate(date);
-    },
-  },
+    }
+  }
 };
 </script>
 

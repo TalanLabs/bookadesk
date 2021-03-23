@@ -15,7 +15,7 @@ Vue.config.productionTip = false;
 Vue.use(Toasted, {
   duration: 3000,
   keepOnHover: true,
-  className: "toast",
+  className: "toast"
 });
 
 // Load saved state
@@ -26,13 +26,13 @@ if (localStorage.selectedOfficeId) {
 const kcConfig: Keycloak.KeycloakConfig = {
   url: `${config.keycloakUrl}`,
   realm: "Talan",
-  clientId: "desk-booking-front",
+  clientId: "desk-booking-front"
 };
 
 const keycloak = Keycloak(kcConfig);
 keycloak
   .init({ onLoad: "login-required", checkLoginIframe: false })
-  .then(async function (authenticated) {
+  .then(async function(authenticated) {
     if (
       keycloak.tokenParsed &&
       keycloak.tokenParsed.resource_access &&
@@ -49,14 +49,14 @@ keycloak
 
     axios.defaults.headers.common.Authorization = "Bearer " + keycloak.token;
     console.debug("Keycloak initialized");
-    keycloak.loadUserInfo().then(async (userInfo) => {
+    keycloak.loadUserInfo().then(async userInfo => {
       console.debug("User loaded", userInfo);
       await store.dispatch("setCurrentUser", userInfo);
     });
     new Vue({
       router,
       store: store,
-      render: (h) => h(App),
+      render: h => h(App)
     }).$mount("#app");
 
     // Set interval to refresh token
@@ -64,7 +64,7 @@ keycloak
       console.log("Refreshing token...");
       keycloak
         .updateToken(70)
-        .then((refreshed) => {
+        .then(refreshed => {
           axios.defaults.headers.common.Authorization =
             "Bearer " + keycloak.token;
           if (refreshed) {
@@ -78,12 +78,12 @@ keycloak
   });
 
 axios.interceptors.response.use(
-  function (response) {
+  function(response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     return response;
   },
-  function (error) {
+  function(error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     if (error.response && error.response.status === 403) {

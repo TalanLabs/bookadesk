@@ -3,7 +3,7 @@
     <h1>Statistiques</h1>
     <SelectOffice @selectedOffice="loadStats"></SelectOffice>
     <datepicker
-            class="stats__datepicker"
+      class="stats__datepicker"
       @selected="setSelectedDate"
       :value="selectedDate"
       :monday-first="true"
@@ -42,7 +42,7 @@ export default Vue.extend({
     return {
       stats: {} as DayStats,
       fr: fr,
-      selectedDate: new Date(),
+      selectedDate: new Date()
     };
   },
   async created() {
@@ -59,8 +59,8 @@ export default Vue.extend({
     async setSelectedDate(value: Date) {
       this.selectedDate = value;
       await this.loadStats();
-    },
-  },
+    }
+  }
 });
 </script>
 

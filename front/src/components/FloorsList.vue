@@ -35,7 +35,7 @@
               'background-color': isBooked(place.id)
                 ? 'var(--booked)'
                 : 'var(--free)',
-              color: 'var(--text-darker)',
+              color: 'var(--text-darker)'
             }"
             @click="selectPlace(place.id)"
           >
@@ -51,12 +51,11 @@
                   :class="{
                     booked: isBooked(place.id),
                     selected: selectedPlaceId === place.id,
-                    mine: currentUser.email === getBookedEmail(place.id),
+                    mine: currentUser.email === getBookedEmail(place.id)
                   }"
                   :style="{
                     width:
-                      Math.max(10, getBookedEmail(place.id).length * 0.5) +
-                      'em',
+                      Math.max(10, getBookedEmail(place.id).length * 0.5) + 'em'
                   }"
                 >
                   Place {{ place.number }}
@@ -68,7 +67,7 @@
                   <CancelBooking
                     v-if="
                       currentUser.email === getBookedEmail(place.id) ||
-                      ($store.state.isUserAdmin && getBooking(place.id))
+                        ($store.state.isUserAdmin && getBooking(place.id))
                     "
                     :booking-id="getBooking(place.id).id"
                   ></CancelBooking>
@@ -101,7 +100,7 @@
           :class="{
             booked: isBooked(place.id),
             selected: selectedPlaceId === place.id,
-            mine: currentUser.email === getBookedEmail(place.id),
+            mine: currentUser.email === getBookedEmail(place.id)
           }"
           v-for="place in floor.places"
           :key="place.id"
@@ -116,7 +115,7 @@
           <CancelBooking
             v-if="
               currentUser.email === getBookedEmail(place.id) ||
-              ($store.state.isUserAdmin && getBooking(place.id))
+                ($store.state.isUserAdmin && getBooking(place.id))
             "
             :booking-id="getBooking(place.id).id"
           ></CancelBooking>
@@ -167,7 +166,7 @@ export default Vue.extend({
       office: {} as any,
       selectedPlaceId: "",
       showPlan: true,
-      selectedFloorId: "",
+      selectedFloorId: ""
     };
   },
   computed: {
@@ -179,7 +178,7 @@ export default Vue.extend({
         );
       }
       return null;
-    },
+    }
   },
   methods: {
     async book() {
@@ -189,7 +188,7 @@ export default Vue.extend({
       const options = {
         placeId: this.selectedPlaceId,
         officeId: this.selectedOffice,
-        date: this.selectedDate,
+        date: this.selectedDate
       };
       const result = await this.$store.dispatch("confirmBooking", options);
       if (!result) {
@@ -226,8 +225,8 @@ export default Vue.extend({
     },
     onSelectFloor(e: any): void {
       localStorage.selectedFloorId = e.target.value;
-    },
-  },
+    }
+  }
 });
 </script>
 

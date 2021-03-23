@@ -73,7 +73,7 @@ export default {
     return {
       comments: "",
       missingSupplies: [],
-      supplyType: "GEL",
+      supplyType: "GEL"
     };
   },
   created() {
@@ -108,8 +108,8 @@ export default {
       this.supplyType = "GEL";
       this.comments = "";
       await this.loadMissingSupplies();
-    },
-  },
+    }
+  }
 };
 </script>
 

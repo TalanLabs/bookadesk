@@ -37,8 +37,8 @@ export default {
     },
     goInfo() {
       this.$router.push({ name: "Info" });
-    },
-  },
+    }
+  }
 };
 </script>
 <style>

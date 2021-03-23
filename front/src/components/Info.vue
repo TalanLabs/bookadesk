@@ -25,8 +25,8 @@ export default {
   methods: {
     openInfoTalan() {
       window.open("https://portail.talan.com/infocovid.html", "_blank");
-    },
-  },
+    }
+  }
 };
 </script>
 

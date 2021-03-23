@@ -15,43 +15,43 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: Home
   },
   {
     path: "/booking",
     name: "Booking",
-    component: BookingForm,
+    component: BookingForm
   },
   {
     path: "/info",
     name: "Info",
-    component: Info,
+    component: Info
   },
   {
     path: "/stats",
     name: "Stats",
-    component: Stats,
+    component: Stats
   },
   {
     path: "/edit",
     name: "EditOffice",
-    component: EditOffice,
+    component: EditOffice
   },
   {
     path: "/edit-places/:officeId/:floorId",
     name: "EditPlaces",
-    component: EditPlaces,
+    component: EditPlaces
   },
   {
     path: "/supplies",
     name: "MissingSupplies",
-    component: MissingSupplies,
+    component: MissingSupplies
   },
   {
     path: "/booking-confirmation",
     name: "BookingConfirmation",
     component: BookingConfirmation,
-    props: true,
+    props: true
   },
   {
     path: "/about",
@@ -60,12 +60,12 @@ const routes: Array<RouteConfig> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  },
+      import(/* webpackChunkName: "about" */ "../views/About.vue")
+  }
 ];
 
 const router = new VueRouter({
-  routes,
+  routes
 });
 
 export default router;

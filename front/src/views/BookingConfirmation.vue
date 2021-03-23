@@ -19,22 +19,22 @@ export default Vue.extend({
   props: {
     date: { type: String },
     place: {
-      type: Object,
+      type: Object
     },
-    officeId: String,
+    officeId: String
   },
   computed: {
     getReadableDate() {
       const string = formatDate(this.date);
       return string;
-    },
+    }
   },
   methods: {
     async book() {
       const options = {
         placeId: this.place.id,
         officeId: this.officeId,
-        date: this.date,
+        date: this.date
       };
       const result = await bookPlace(options);
       if (!result) {
@@ -49,8 +49,8 @@ export default Vue.extend({
         this.$toasted.error("Erreur inattendue, veuillez réessayer");
       }
       await this.$router.push({ name: "Home" });
-    },
-  },
+    }
+  }
 });
 </script>
 

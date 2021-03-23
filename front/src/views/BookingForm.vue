@@ -45,7 +45,7 @@ export default Vue.extend({
   data() {
     return {
       office: {} as Office,
-      selectedDay: 0,
+      selectedDay: 0
     };
   },
   async created() {
@@ -56,14 +56,14 @@ export default Vue.extend({
     dateOptions() {
       function getLabelForDate(daysOffset: number) {
         return format(add(new Date(), { days: daysOffset }), "cccc d MMM", {
-          locale: fr,
+          locale: fr
         });
       }
 
       function getOption(offsetInDays: number) {
         return {
           text: getLabelForDate(offsetInDays),
-          value: offsetInDays,
+          value: offsetInDays
         };
       }
       const options = [
@@ -74,13 +74,13 @@ export default Vue.extend({
         getOption(4),
         getOption(5),
         getOption(6),
-        getOption(7),
+        getOption(7)
       ];
-      return options.filter((o) => {
+      return options.filter(o => {
         const day = add(new Date(), { days: o.value }).getDay();
         return day !== 0 && day !== 6;
       });
-    },
+    }
   },
   methods: {
     getSelectedDate() {
@@ -90,8 +90,8 @@ export default Vue.extend({
     setSelectedDate() {
       this.$store.commit("setSelectedDate", this.getSelectedDate());
       this.$store.dispatch("fetchBookings");
-    },
-  },
+    }
+  }
 });
 </script>
 

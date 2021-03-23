@@ -1,0 +1,25 @@
+#!/bin/bash
+echo "Pre-push hook!"
+
+# Run frontend linter
+echo "Lint webapp"
+cd ../front || exit 1
+npm run lint -- --max-warnings 0
+status=$?
+if test $status -eq 0; then
+  echo "npm lint frontend success"
+else
+  echo "npm lint frontend failed"
+  exit 1
+fi
+
+echo "Lint backend"
+cd ../back || exit 1
+npm run lint -- --max-warnings 0
+status=$?
+if test $status -eq 0; then
+  echo "npm lint backend success"
+else
+  echo "npm lint backend failed"
+  exit 1
+fi

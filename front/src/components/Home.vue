@@ -30,9 +30,9 @@
     </div>
     <Info></Info>
     <WideButton
-            @click="goToMissingSupplies"
-            :title="'Signaler du matériel manquant'"
-            subtitle="Gel hydroalcoolique, ..."
+      @click="goToMissingSupplies"
+      :title="'Signaler du matériel manquant'"
+      subtitle="Gel hydroalcoolique, ..."
     >
       <div class="button-icon">
         +
@@ -55,7 +55,7 @@ export default {
     Info,
     WideButton,
     BookingCard,
-    NextBooking,
+    NextBooking
   },
   async created() {
     await this.$store.dispatch("fetchNextBooking");
@@ -64,7 +64,7 @@ export default {
     ...mapGetters(["currentUser"]),
     nextBooking() {
       return this.$store.getters.nextBooking;
-    },
+    }
   },
   methods: {
     async goToBooking() {
@@ -87,8 +87,8 @@ export default {
     isConfirmationDisabled() {
       const todayString = format(Date.now(), "yyyyMMdd");
       return !this.nextBooking || this.nextBooking.date !== todayString;
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -18,30 +18,32 @@
       </ul>
     </div>
     <div>
-    <div class="title">
-       Nom de l'étage:
-      <div v-show="!editFloorName">
-      <div class="floor-name-wrapper">
-         <div class="floor-name"> {{ this.floor.name }}</div>
-         <button
-          class="edit-button icon-button clickable"
-          v-show="!editFloorName"
-          @click="toggleEditFloorName()"
-        ></button>
+      <div class="title">
+        Nom de l'étage:
+        <div v-show="!editFloorName">
+          <div class="floor-name-wrapper">
+            <div class="floor-name">{{ this.floor.name }}</div>
+            <button
+              class="edit-button icon-button clickable"
+              v-show="!editFloorName"
+              @click="toggleEditFloorName()"
+            ></button>
+          </div>
+        </div>
+        <div class="input-wrapper" v-show="editFloorName">
+          <input
+            v-model="editedFloorName"
+            v-bind:placeholder="this.floor.name"
+          />
+          <button
+            class="clickable"
+            v-show="editFloorName"
+            @click="toggleEditFloorName()"
+          >
+            Annuler
+          </button>
+        </div>
       </div>
-        
-      </div>
-      <div class="input-wrapper" v-show="editFloorName">
-        <input v-model="editedFloorName" v-bind:placeholder="this.floor.name" />
-        <button
-          class="clickable"
-          v-show="editFloorName"
-          @click="toggleEditFloorName()"
-        >
-          Annuler
-        </button>
-      </div>
-    </div>
     </div>
 
     <div class="row floor-detail" v-if="floor" :key="key">
@@ -66,7 +68,7 @@
             :key="'place-label-' + place.id"
             :style="{
               top: place.position.top + '%',
-              left: place.position.left + '%',
+              left: place.position.left + '%'
             }"
             @click="selectedPlace = place"
             draggable="true"
@@ -169,135 +171,138 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from "vuex";
 import {
   getOffice,
   saveFloorPlaces,
   uploadFile,
   getFloorPlan,
-  updateFloorName,
-} from '@/services'
-import LabelEditor from '@/components/LabelEditor'
-import { th } from 'date-fns/locale'
+  updateFloorName
+} from "@/services";
+import LabelEditor from "@/components/LabelEditor";
+import { th } from "date-fns/locale";
 
 export default {
-  name: 'EditPlaces.vue',
+  name: "EditPlaces.vue",
   components: { LabelEditor },
   async created() {
-    this.selectedOfficeId = this.$route.params.officeId
-    await this.loadOffice(this.selectedOfficeId)
-    this.selectedFloorId = this.$route.params.floorId
+    this.selectedOfficeId = this.$route.params.officeId;
+    await this.loadOffice(this.selectedOfficeId);
+    this.selectedFloorId = this.$route.params.floorId;
     this.planImage = await getFloorPlan(
       this.selectedFloorId,
-      this.selectedOfficeId,
-    )
-    this.planImageUrl = 'data:image/png;base64,' + this.planImage
+      this.selectedOfficeId
+    );
+    this.planImageUrl = "data:image/png;base64," + this.planImage;
   },
   data() {
     return {
       office: {},
-      selectedFloorId: '',
+      selectedFloorId: "",
       selectedFloor: {},
       key: 1,
       selectedPlace: {},
-      placeName: '',
-      file: '',
-      planImage: '',
+      placeName: "",
+      file: "",
+      planImage: "",
       planImageUrl: null,
       editFloorName: false,
-      editedFloorName: '',
-    }
+      editedFloorName: ""
+    };
   },
   computed: {
     floor() {
       if (this.office && this.office.floors) {
-        return this.office.floors.find((f) => f.id === this.selectedFloorId)
+        return this.office.floors.find(f => f.id === this.selectedFloorId);
       }
-      return null
-    },
+      return null;
+    }
   },
   methods: {
-    ...mapActions(['fetchOffices']),
+    ...mapActions(["fetchOffices"]),
     async loadOffice() {
-      const selectedOfficeId = this.selectedOfficeId
+      const selectedOfficeId = this.selectedOfficeId;
       if (!selectedOfficeId) {
-        return null
+        return null;
       }
-      this.office = await getOffice(selectedOfficeId)
-      this.selectedFloorId = this.office.floors[0].id
-      this.selectedPlace = {}
+      this.office = await getOffice(selectedOfficeId);
+      this.selectedFloorId = this.office.floors[0].id;
+      this.selectedPlace = {};
     },
     addPlace() {
       const newPlace = {
         number: this.placeName,
-        id: this.floor.id + '_' + this.placeName,
-        position: { left: 50, top: 50 },
-      }
-      this.floor.places.push(newPlace)
-      this.key = this.key + 1
-      this.selectedPlace = newPlace
-      this.placeName = ''
+        id: this.floor.id + "_" + this.placeName,
+        position: { left: 50, top: 50 }
+      };
+      this.floor.places.push(newPlace);
+      this.key = this.key + 1;
+      this.selectedPlace = newPlace;
+      this.placeName = "";
     },
     async save() {
-      if (this.file != '') {
-        await this.uploadPlan()
+      if (this.file != "") {
+        await this.uploadPlan();
       }
-      if (this.floor.name != this.editedFloorName && this.editedFloorName !== '') {
+      if (
+        this.floor.name != this.editedFloorName &&
+        this.editedFloorName !== ""
+      ) {
         const resultUpdateFloorName = await updateFloorName(
           this.office.id,
           this.floor.id,
-          this.editedFloorName,
-        )
+          this.editedFloorName
+        );
       }
-      const result = await saveFloorPlaces(this.office.id, this.floor)
+      const result = await saveFloorPlaces(this.office.id, this.floor);
       if (result instanceof Error) {
-        console.error(result)
-        this.$toasted.error('Erreur lors de la sauvegarde')
+        console.error(result);
+        this.$toasted.error("Erreur lors de la sauvegarde");
       } else {
-        this.$toasted.success("Plan de l'étage enregistré")
+        this.$toasted.success("Plan de l'étage enregistré");
       }
     },
     updatePlaceNumber(value) {
-      this.selectedPlace.number = value
+      this.selectedPlace.number = value;
     },
     updatePos(e) {
-      const planRect = document.getElementById('plan').getBoundingClientRect()
+      const planRect = document.getElementById("plan").getBoundingClientRect();
       const labelRect = document
-        .getElementById('place-label-' + this.selectedPlace.id)
-        .getBoundingClientRect()
+        .getElementById("place-label-" + this.selectedPlace.id)
+        .getBoundingClientRect();
       const leftPercent =
         Math.round(
-          ((e.x - planRect.x - labelRect.width / 2) / planRect.width) * 10000,
-        ) / 100
+          ((e.x - planRect.x - labelRect.width / 2) / planRect.width) * 10000
+        ) / 100;
       const topPercent =
         Math.round(
-          ((e.y - planRect.y - labelRect.height / 2) / planRect.height) * 10000,
-        ) / 100
-      this.selectedPlace.position.left = leftPercent
-      this.selectedPlace.position.top = topPercent
+          ((e.y - planRect.y - labelRect.height / 2) / planRect.height) * 10000
+        ) / 100;
+      this.selectedPlace.position.left = leftPercent;
+      this.selectedPlace.position.top = topPercent;
     },
     onDragStart(place) {
-      this.selectedPlace = place
+      this.selectedPlace = place;
     },
     async uploadPlan() {
-      const formData = new FormData()
-      formData.append('file', this.file)
+      const formData = new FormData();
+      formData.append("file", this.file);
       const result = await uploadFile(
         formData,
         this.selectedFloorId,
-        this.office.id,
-      )
+        this.office.id
+      );
     },
     onPlanFileChange() {
-      this.file = this.$refs.file.files[0]
-      this.planImageUrl = URL.createObjectURL(this.file)
+      this.file = this.$refs.file.files[0];
+      this.planImageUrl = URL.createObjectURL(this.file);
     },
     toggleEditFloorName() {
-      this.editFloorName = !this.editFloorName
-      this.editedFloorName = ""
-    },
-  },
-}
+      this.editFloorName = !this.editFloorName;
+      this.editedFloorName = "";
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -409,7 +414,7 @@ export default {
 }
 
 .edit-button {
-  background-image: url('../assets/edit.svg');
+  background-image: url("../assets/edit.svg");
   background-repeat: no-repeat;
   border: none;
   width: 17px;
@@ -433,6 +438,6 @@ export default {
 }
 
 .input-wrapper {
-    margin-left: 2rem;
+  margin-left: 2rem;
 }
 </style>
