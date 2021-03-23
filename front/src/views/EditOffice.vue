@@ -83,9 +83,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import SelectOffice from "../components/SelectOffice";
-import { getOffice, saveFloorPlaces } from "@/services";
-import LabelEditor from "@/components/LabelEditor";
 import { toLowerSnakeCase } from "@/util";
 import { uuid } from "vue-uuid";
 

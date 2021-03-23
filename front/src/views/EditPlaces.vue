@@ -173,14 +173,13 @@
 <script>
 import { mapActions } from "vuex";
 import {
+  getFloorPlan,
   getOffice,
   saveFloorPlaces,
-  uploadFile,
-  getFloorPlan,
-  updateFloorName
+  updateFloorName,
+  uploadFile
 } from "@/services";
 import LabelEditor from "@/components/LabelEditor";
-import { th } from "date-fns/locale";
 
 export default {
   name: "EditPlaces.vue",
@@ -241,14 +240,14 @@ export default {
       this.placeName = "";
     },
     async save() {
-      if (this.file != "") {
+      if (this.file !== "") {
         await this.uploadPlan();
       }
       if (
-        this.floor.name != this.editedFloorName &&
+        this.floor.name !== this.editedFloorName &&
         this.editedFloorName !== ""
       ) {
-        const resultUpdateFloorName = await updateFloorName(
+        await updateFloorName(
           this.office.id,
           this.floor.id,
           this.editedFloorName
@@ -287,11 +286,7 @@ export default {
     async uploadPlan() {
       const formData = new FormData();
       formData.append("file", this.file);
-      const result = await uploadFile(
-        formData,
-        this.selectedFloorId,
-        this.office.id
-      );
+      await uploadFile(formData, this.selectedFloorId, this.office.id);
     },
     onPlanFileChange() {
       this.file = this.$refs.file.files[0];
@@ -308,10 +303,6 @@ export default {
 <style scoped>
 .edit-office {
   margin: 0 2em;
-}
-
-.office-and-floor-filters {
-  max-width: 30em;
 }
 
 .office-and-floor-filters > * {

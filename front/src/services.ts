@@ -6,6 +6,7 @@ import {
   Office,
   PlaceAlreadyBookedError
 } from "@/types";
+import { MissingSupply } from "../../back/src/domain/domain";
 
 const apiUrl = config.apiUrl;
 
@@ -136,7 +137,7 @@ export const notifyMissingSupplies = async (
 
 export const getMissingSupplies = async (
   officeId: string
-): Promise<any[] | Error> => {
+): Promise<MissingSupply[] | Error> => {
   try {
     const res = await axios.get(`${apiUrl}/supplies`, { params: { officeId } });
     return res.data;
@@ -182,7 +183,7 @@ export const uploadFile = async (
 export const getFloorPlan = async (
   floorId: string,
   officeId: string
-): Promise<any> => {
+): Promise<Floor> => {
   try {
     const res = await axios.get(
       `${apiUrl}/offices/${officeId}/floors/${floorId}/plan`

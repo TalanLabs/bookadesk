@@ -32,7 +32,7 @@ const kcConfig: Keycloak.KeycloakConfig = {
 const keycloak = Keycloak(kcConfig);
 keycloak
   .init({ onLoad: "login-required", checkLoginIframe: false })
-  .then(async function(authenticated) {
+  .then(async function() {
     if (
       keycloak.tokenParsed &&
       keycloak.tokenParsed.resource_access &&

@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Vuex, { ActionContext, MutationTree } from "vuex";
+import Vuex, { ActionContext } from "vuex";
 import {
   bookPlace,
   confirmPresence,
@@ -17,9 +17,9 @@ interface StateModel {
   currentUser: {};
   offices: Office[];
   officesToSave: string[];
-  bookings: any;
+  bookings: Record<string, Booking>;
   isUserAdmin: boolean;
-  nextBooking: any;
+  nextBooking: Booking | undefined;
   selectedOfficeId: string;
   selectedDate: string;
 }
@@ -34,7 +34,7 @@ export default new Vuex.Store<StateModel>({
      */
     bookings: {},
     isUserAdmin: false,
-    nextBooking: {},
+    nextBooking: undefined,
     selectedOfficeId: "dumont_durville",
     selectedDate: ""
   },
@@ -60,7 +60,7 @@ export default new Vuex.Store<StateModel>({
   },
   mutations: {
     confirmBooking(state, bookingId) {
-      if (state.nextBooking.id === bookingId) {
+      if (state.nextBooking && state.nextBooking.id === bookingId) {
         Vue.set(state.nextBooking, "confirmed", true);
       }
     },
@@ -94,8 +94,8 @@ export default new Vuex.Store<StateModel>({
       state.offices.filter(o => o.id === officeId)[0].floors.push(floor);
     },
     deleteBooking(state, bookingId) {
-      for (const [key, value] of state.bookings.entries()) {
-        if (value.id === bookingId) {
+      for (const key in state.bookings) {
+        if (state.bookings[key].id === bookingId) {
           delete state.bookings[key];
           return;
         }

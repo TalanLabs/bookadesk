@@ -1,25 +1,33 @@
 #!/bin/bash
-echo "Pre-push hook!"
+echo "Running pre-push hook..."
 
-# Run frontend linter
-echo "Lint webapp"
-cd ../front || exit 1
-npm run lint -- --max-warnings 0
-status=$?
-if test $status -eq 0; then
-  echo "npm lint frontend success"
+cd back || exit 1
+
+#echo "Lint backend"
+#npm run lint -- --max-warnings 0
+#if test $? -eq 0; then
+#  echo "Backend lint success"
+#else
+#  echo "Backend lint failed"
+#  exit 1
+#fi
+
+echo "Check backend dependencies"
+npm run check-architecture
+if test $? -eq 0; then
+  echo "Backend dependencies success"
 else
-  echo "npm lint frontend failed"
+  echo "Backend dependencies failed"
   exit 1
 fi
 
-echo "Lint backend"
-cd ../back || exit 1
+cd ../front || exit 1
+
+echo "Lint webapp"
 npm run lint -- --max-warnings 0
-status=$?
-if test $status -eq 0; then
-  echo "npm lint backend success"
+if test $? -eq 0; then
+  echo "Frontend lint success"
 else
-  echo "npm lint backend failed"
+  echo "Frontend lint failed"
   exit 1
 fi
