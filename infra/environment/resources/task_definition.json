@@ -1,0 +1,26 @@
+[
+  {
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${log_group}",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "ecs"
+      }
+    },
+    "portMappings": [
+      {
+        "hostPort": 8000,
+        "protocol": "tcp",
+        "containerPort": 8000
+      }
+    ],
+    "cpu": 0,
+    "environment": [],
+    "essential": true,
+    "mountPoints": [],
+    "volumesFrom": [],
+    "image": "${registry_docker_image}",
+    "name": "${task_name}"
+  }
+]

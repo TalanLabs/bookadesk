@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="57"
+   height="52"
+   viewBox="0 0 57 52"
+   version="1.1"
+   id="svg16"
+   sodipodi:docname="Place.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata22">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs20" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2048"
+     inkscape:window-height="1088"
+     id="namedview18"
+     showgrid="false"
+     inkscape:zoom="3.2777778"
+     inkscape:cx="28.5"
+     inkscape:cy="24"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg16" />
+  <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
+  <title
+     id="title2">Molecule/Icon Copy 5</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <g
+     id="Deuxième-version"
+     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
+     transform="translate(-10,-8)">
+    <g
+       id="3.-Stock-capacity-Copy"
+       transform="translate(-242,-499)">
+      <g
+         id="Molecule/Icon"
+         transform="translate(252,507)">
+        <g
+           id="Icon">
+          <rect
+             id="Rectangle-Copy-2"
+             x="0"
+             y="0"
+             width="57"
+             height="52"
+             rx="12"
+             style="fill:#e5fff7" />
+          <g
+             id="Atom/Icon/place"
+             transform="translate(15,12)"
+             style="fill:#07d998;stroke:#00de94">
+            <g
+               id="noun_map-pin_1903719"
+               transform="translate(3.681818,1.208333)">
+              <path
+                 d="m 9.5674596,26.479979 c 0.06534,0.06604 0.1560049,0.103354 0.2507222,0.103354 0.00118,0 0.00219,0 0.00338,0 0.095899,-9.73e-4 0.1872392,-0.04008 0.2519042,-0.108059 0.02381,-0.02515 2.411998,-2.546542 4.766761,-5.871568 3.182569,-4.493726 4.79614,-8.242391 4.79614,-11.1416684 C 19.636364,4.2446691 15.231925,0 9.8181818,0 4.4044385,0 0,4.2446691 0,9.4620377 0,12.520971 1.6140772,16.318474 4.79749,20.749083 c 2.3561137,3.279434 4.7461636,5.70672 4.7699696,5.730896 z M 9.8181818,0.66458333 c 5.0325102,0 9.1266272,3.94645027 9.1266272,8.79745437 0,6.0028293 -7.638502,14.6599363 -9.1313546,16.2939733 C 8.3097963,24.166755 0.69155439,15.800079 0.69155439,9.4620377 c 0,-4.8510041 4.09411701,-8.79745437 9.12662741,-8.79745437 z"
+                 id="Shape"
+                 inkscape:connector-curvature="0" />
+              <path
+                 d="M 14.727273,8.4583333 C 14.727273,5.7932316 12.525092,3.625 9.8182613,3.625 c -2.7069896,0 -4.9091704,2.1682316 -4.9091704,4.8333333 0,2.6651017 2.2021808,4.8333337 4.9091704,4.8333337 2.7068307,0 4.9090117,-2.168232 4.9090117,-4.8333337 z m -9.167144,0 c 0,-2.3117371 1.9101991,-4.1923317 4.2581323,-4.1923317 2.3479337,0 4.2579737,1.8805946 4.2579737,4.1923317 0,2.3117367 -1.91004,4.1923317 -4.2579737,4.1923317 -2.3479332,0 -4.2581323,-1.880595 -4.2581323,-4.1923317 z"
+                 id="path8"
+                 inkscape:connector-curvature="0" />
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

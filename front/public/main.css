@@ -1,0 +1,202 @@
+:root {
+  --primary: #0063ff;
+  --primary-light: #66a1ff;
+  --secondary: #2dd2d8;
+  --text-dark: #696a75;
+  --text-darker: #444;
+  --background-one: #ffffff;
+  --background-cards: #f2f3fa;
+  --background-buttons: #8461f1;
+  --background-green: #82dac0;
+  --accent: #6330f3;
+  --text-light: #ffffff;
+  --booked: #f2c2c2;
+  --free: #add9cc;
+  --selected: #82dac0;
+  --shadow: #dcdcdc;
+}
+
+html {
+  color: var(--text-dark);
+}
+
+@media (max-width: 400px) {
+  html {
+    font-size: 80%;
+  }
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  color: var(--text-dark);
+  background-color: var(--background-one);
+  font-family: Montserrat, sans-serif;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.title {
+  font-size: 2.4em;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 2em;
+  margin-top: 32px;
+}
+
+.section-title {
+  font-size: 1.6em;
+  font-weight: 600;
+  margin-top: 32px;
+}
+
+.select-css {
+  display: block;
+  font-size: 16px;
+  font-family: sans-serif;
+  font-weight: 500;
+  line-height: 1.3;
+  padding: 1.5em 2em;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--background-cards);
+  border-radius: 12px;
+  border: none;
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='iso-8859-1'%3F%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 330.002 330.002' style='enable-background:new 0 0 330.002 330.002;' xml:space='preserve'%3E%3Cpath id='XMLID_229_' d='M327.001,99.751c-4.971-6.628-14.374-7.971-21-3l-140.997,105.75L24.001,96.751 c-6.628-4.971-16.029-3.626-21,3c-4.971,6.627-3.627,16.03,3,21l150.004,112.5c2.667,2,5.833,3,9,3c3.166,0,6.333-1,9-3 l149.996-112.5C330.628,115.781,331.972,106.379,327.001,99.751z'/%3E%3C/svg%3E%0A");
+  background-position: right 2em top 50%;
+  background-repeat: no-repeat;
+  background-size: 1em auto;
+  cursor: pointer;
+}
+.select-css::-ms-expand {
+  display: none;
+}
+.select-css:hover {
+  box-shadow: 2px 2px 2px var(--shadow);
+}
+.select-css option {
+  font-weight: normal;
+}
+
+.clickable {
+  cursor: pointer;
+}
+.clickable:hover {
+  box-shadow: 2px 2px 2px gainsboro;
+}
+
+.button {
+  border-radius: 6px;
+  border: none;
+  padding: 1em 2em;
+  cursor: pointer;
+  text-align: center;
+}
+
+.button:hover {
+  box-shadow: 2px 2px 2px var(--shadow);
+}
+
+.button:disabled {
+  opacity: 0.7;
+  background-color: var(--background-buttons);
+  color: var(--text-light);
+  box-shadow: none;
+}
+
+.button-primary {
+  background-color: var(--primary);
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.disabled {
+  opacity: 0.7;
+  background-color: var(--primary-light);
+  color: var(--background-cards);
+  cursor: default;
+}
+
+.disabled:hover {
+  box-shadow: none;
+}
+
+.toast {
+  font-family: sans-serif;
+}
+
+.card {
+  background-color: var(--background-cards);
+  border-radius: 12px;
+  padding: 2em;
+}
+
+.margin-h-1 {
+  margin: 1em 0;
+}
+
+.plan-container {
+  position: relative;
+}
+
+.plan {
+  cursor: pointer;
+  width: 100%;
+  filter: grayscale(100%);
+}
+
+.place-label {
+  position: absolute;
+  cursor: pointer;
+  padding: 1px 4px;
+  height: 18px;
+  line-height: 22px;
+  font-size: 16px;
+  border-radius: 2px;
+}
+
+@media (min-width: 800px) {
+  .plan-container {
+    margin-left: -100px;
+    width: 800px;
+  }
+
+  .plan {
+    max-width: 800px;
+  }
+}
+
+@media (max-width: 400px) {
+  .place-label {
+    padding: 1px 2px;
+    height: 12px;
+    line-height: 15px;
+    font-size: 12px;
+  }
+}
+
+/*Deactivate blue light on click on mobile*/
+input,
+textarea,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
