@@ -24,16 +24,16 @@ export class DynamoDbBookingRepo implements BookingRepo {
         placeId: booking.placeId,
         date: booking.date,
         officeId: booking.officeId,
-        createdAt: Date.now(),
+        createdAt: Date.now()
       },
       ConditionExpression: "#placeId <> :placeId",
       ExpressionAttributeNames: {
-        "#placeId": "placeId",
+        "#placeId": "placeId"
       },
-      ExpressionAttributeValues: { ":placeId": booking.placeId },
+      ExpressionAttributeValues: { ":placeId": booking.placeId }
     };
 
-    this.documentClient.put(params, function (err, data) {
+    this.documentClient.put(params, function(err) {
       if (err) {
         console.error(
           "Unable to add booking",
@@ -53,16 +53,16 @@ export class DynamoDbBookingRepo implements BookingRepo {
         TableName: this.tableName,
         ExpressionAttributeValues: {
           ":d": date,
-          ":o": officeId,
+          ":o": officeId
         },
         // ProjectionExpression: "#yr, title, info.rating",
         FilterExpression: "#date = :d and officeId = :o",
         ExpressionAttributeNames: {
-          "#date": "date",
-        },
+          "#date": "date"
+        }
       };
 
-      let bookings = await this.documentClient.scan(params).promise();
+      const bookings = await this.documentClient.scan(params).promise();
       return bookings.Items as Booking[];
     } catch (e) {
       console.error("Failed to fetch bookings", e);
@@ -75,16 +75,16 @@ export class DynamoDbBookingRepo implements BookingRepo {
       const params = {
         TableName: this.tableName,
         ExpressionAttributeNames: {
-          "#date": "date",
+          "#date": "date"
         },
         ExpressionAttributeValues: {
           ":d": date,
-          ":e": email,
+          ":e": email
         },
         // ProjectionExpression: "#yr, title, info.rating",
-        FilterExpression: "#date = :d and email = :e",
+        FilterExpression: "#date = :d and email = :e"
       };
-      let bookings = await this.documentClient.scan(params).promise();
+      const bookings = await this.documentClient.scan(params).promise();
       return bookings.Items as Booking[];
     } catch (e) {
       console.error("Failed to fetch bookings", e);
@@ -98,15 +98,15 @@ export class DynamoDbBookingRepo implements BookingRepo {
       const params = {
         TableName: this.tableName,
         ExpressionAttributeNames: {
-          "#date": "date",
+          "#date": "date"
         },
         ExpressionAttributeValues: {
           ":d": today,
-          ":e": email,
+          ":e": email
         },
-        FilterExpression: "#date >= :d and email = :e",
+        FilterExpression: "#date >= :d and email = :e"
       };
-      let result = await this.documentClient.scan(params).promise();
+      const result = await this.documentClient.scan(params).promise();
       let bookings = result.Items as Booking[];
       if (bookings.length === 0) {
         return null;
@@ -119,11 +119,11 @@ export class DynamoDbBookingRepo implements BookingRepo {
     }
   }
 
-  async deleteBooking(bookingId): Promise<void> {
+  async deleteBooking(bookingId: string): Promise<void> {
     try {
       const params = {
         TableName: this.tableName,
-        Key: { id: bookingId },
+        Key: { id: bookingId }
       };
       await this.documentClient.delete(params).promise();
     } catch (e) {
@@ -132,17 +132,17 @@ export class DynamoDbBookingRepo implements BookingRepo {
     }
   }
 
-  async getBooking(bookingId): Promise<Booking> {
+  async getBooking(bookingId: string): Promise<Booking> {
     try {
       const params = {
         TableName: this.tableName,
         KeyConditionExpression: "#id = :id",
         ExpressionAttributeNames: {
-          "#id": "id",
+          "#id": "id"
         },
         ExpressionAttributeValues: {
-          ":id": bookingId,
-        },
+          ":id": bookingId
+        }
       };
       const result = await this.documentClient.query(params).promise();
       const bookings = result.Items as Booking[];
@@ -158,13 +158,13 @@ export class DynamoDbBookingRepo implements BookingRepo {
       const params = {
         TableName: this.tableName,
         Key: {
-          id: bookingId,
+          id: bookingId
         },
         UpdateExpression: "set confirmed=:c",
         ExpressionAttributeValues: {
-          ":c": true,
+          ":c": true
         },
-        ReturnValues: "UPDATED_NEW",
+        ReturnValues: "UPDATED_NEW"
       };
       await this.documentClient.update(params).promise();
     } catch (e) {

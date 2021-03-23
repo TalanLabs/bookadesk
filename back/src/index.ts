@@ -1,12 +1,9 @@
 import * as dotenv from "dotenv";
-dotenv.config();
-
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import Keycloak from "keycloak-connect";
 import morgan from "morgan";
-
 
 // AWS should be imported after setting up the environment variables.
 import AWS from "aws-sdk";
@@ -18,6 +15,9 @@ import { DynamoDbOfficeRepo } from "./adapters/DynamoDbOfficeRepo";
 import { createRoutes } from "./router";
 import { DynamoDbSuppliesRepo } from "./adapters/DynamoDbSuppliesRepo";
 import { S3ImageRepo } from "./adapters/S3ImageRepo";
+
+dotenv.config();
+
 let version = "?";
 try {
   version = fs.readFileSync("version", "utf8");
@@ -27,7 +27,7 @@ try {
 
 // DynamoDB
 const awsConfig = {
-  region: "eu-west-3",
+  region: "eu-west-3"
 };
 AWS.config.update(awsConfig);
 const docClient = new AWS.DynamoDB.DocumentClient();
@@ -44,15 +44,16 @@ app.use(morgan("tiny"));
 
 // Security
 const memoryStore = new session.MemoryStore();
-let kcConfig: any = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const kcConfig: any = {
   clientId: "desk-booking-back",
   bearerOnly: true,
   serverUrl: "https://keycloak.ruche-labs.net/auth",
   realm: "Talan",
   realmPublicKey:
-    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnKq0+MnftyVe4ZfzIV2bk5L80dRTn3UIjayKhZuEBd77kNIzQgMAyUg35CQtxBpXmtLfqyyW3wXyD/qtrx2pyFx4l/x2JR4XKtq9SM9mRB30JZO9CFFlmzbTZ7xQuefk/mBqGEapau0ky04AwJoc9H2Yxuom96+8kYx9dEZmaBdTyHxppC3pS5jesLUsEDtmu9i0evxajZkf42iv63d+ONpLKx3wkmNFdkLI7uYiuaxKdoZNnkLMZr3iyvGw7C5kI7ubCp41MJcHhNyqERa84Ibl+xREwKhMj1bs5SlB18URPfJVZAs0RvlJZKbO4m9nHw4WNZ6Qu+xjESZCiQSkRQIDAQAB",
+    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnKq0+MnftyVe4ZfzIV2bk5L80dRTn3UIjayKhZuEBd77kNIzQgMAyUg35CQtxBpXmtLfqyyW3wXyD/qtrx2pyFx4l/x2JR4XKtq9SM9mRB30JZO9CFFlmzbTZ7xQuefk/mBqGEapau0ky04AwJoc9H2Yxuom96+8kYx9dEZmaBdTyHxppC3pS5jesLUsEDtmu9i0evxajZkf42iv63d+ONpLKx3wkmNFdkLI7uYiuaxKdoZNnkLMZr3iyvGw7C5kI7ubCp41MJcHhNyqERa84Ibl+xREwKhMj1bs5SlB18URPfJVZAs0RvlJZKbO4m9nHw4WNZ6Qu+xjESZCiQSkRQIDAQAB"
 };
-let keycloak = new Keycloak({ store: memoryStore }, kcConfig);
+const keycloak = new Keycloak({ store: memoryStore }, kcConfig);
 app.use(keycloak.middleware());
 
 // Server
@@ -75,7 +76,13 @@ const suppliesRepo = new DynamoDbSuppliesRepo(docClient, config.dbPrefix);
 const imageRepo = new S3ImageRepo(config.s3Suffix);
 
 // Routes
-const router = createRoutes(keycloak, bookingRepo, officeRepo, suppliesRepo, imageRepo);
+const router = createRoutes(
+  keycloak,
+  bookingRepo,
+  officeRepo,
+  suppliesRepo,
+  imageRepo
+);
 app.use(router);
 
 function cleanTerminate(signal: NodeJS.Signals): void {
