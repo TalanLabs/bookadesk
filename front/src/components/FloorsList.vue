@@ -35,7 +35,7 @@
               'background-color': isBooked(place.id)
                 ? 'var(--booked)'
                 : 'var(--free)',
-              color: 'var(--text-darker)',
+              color: 'var(--text-darker)'
             }"
             @click="selectPlace(place.id)"
           >
@@ -51,12 +51,11 @@
                   :class="{
                     booked: isBooked(place.id),
                     selected: selectedPlaceId === place.id,
-                    mine: currentUser.email === getBookedEmail(place.id),
+                    mine: currentUser.email === getBookedEmail(place.id)
                   }"
                   :style="{
                     width:
-                      Math.max(10, getBookedEmail(place.id).length * 0.5) +
-                      'em',
+                      Math.max(10, getBookedEmail(place.id).length * 0.5) + 'em'
                   }"
                 >
                   Place {{ place.number }}
@@ -68,7 +67,7 @@
                   <CancelBooking
                     v-if="
                       currentUser.email === getBookedEmail(place.id) ||
-                      ($store.state.isUserAdmin && getBooking(place.id))
+                        ($store.state.isUserAdmin && getBooking(place.id))
                     "
                     :booking-id="getBooking(place.id).id"
                   ></CancelBooking>
@@ -101,7 +100,7 @@
           :class="{
             booked: isBooked(place.id),
             selected: selectedPlaceId === place.id,
-            mine: currentUser.email === getBookedEmail(place.id),
+            mine: currentUser.email === getBookedEmail(place.id)
           }"
           v-for="place in floor.places"
           :key="place.id"
@@ -116,7 +115,7 @@
           <CancelBooking
             v-if="
               currentUser.email === getBookedEmail(place.id) ||
-              ($store.state.isUserAdmin && getBooking(place.id))
+                ($store.state.isUserAdmin && getBooking(place.id))
             "
             :booking-id="getBooking(place.id).id"
           ></CancelBooking>
@@ -146,8 +145,22 @@ import { mapGetters } from "vuex";
 
 import { getOffice } from "@/services";
 import CancelBooking from "@/components/CancelBooking.vue";
-import { DayAlreadyBookedError, PlaceAlreadyBookedError } from "@/types";
+import {
+  Booking,
+  DayAlreadyBookedError,
+  Floor,
+  Office,
+  PlaceAlreadyBookedError
+} from "@/types";
 import ShowPlanButton from "@/components/ShowPlanButton.vue";
+
+interface ChangeEventTarget<T> extends EventTarget {
+  value: T;
+}
+
+interface ChangeEvent<T> extends Event {
+  target: ChangeEventTarget<T>;
+}
 
 export default Vue.extend({
   name: "FloorsList",
@@ -164,22 +177,22 @@ export default Vue.extend({
   },
   data() {
     return {
-      office: {} as any,
+      office: {} as Office,
       selectedPlaceId: "",
       showPlan: true,
-      selectedFloorId: "",
+      selectedFloorId: ""
     };
   },
   computed: {
     ...mapGetters(["currentUser", "selectedDate", "selectedOffice"]),
-    floor(): any {
+    floor(): Floor | undefined {
       if (this.office && this.office.floors) {
         return this.office.floors.find(
-          (f: any) => f.id === this.selectedFloorId
+          (f: Floor) => f.id === this.selectedFloorId
         );
       }
-      return null;
-    },
+      return undefined;
+    }
   },
   methods: {
     async book() {
@@ -189,7 +202,7 @@ export default Vue.extend({
       const options = {
         placeId: this.selectedPlaceId,
         officeId: this.selectedOffice,
-        date: this.selectedDate,
+        date: this.selectedDate
       };
       const result = await this.$store.dispatch("confirmBooking", options);
       if (!result) {
@@ -216,18 +229,21 @@ export default Vue.extend({
     },
     getBookedEmail(placeId: string): string {
       const booking = this.getBooking(placeId);
-      return booking ? booking.email : "";
+      if (!booking || !booking.email) {
+        return "";
+      }
+      return booking.email;
     },
-    getBooking(placeId: string): any {
+    getBooking(placeId: string): Booking | undefined {
       return this.$store.getters.booking(placeId, this.selectedDate);
     },
     isBooked(placeId: string): boolean {
       return !!this.getBooking(placeId);
     },
-    onSelectFloor(e: any): void {
+    onSelectFloor(e: ChangeEvent<string>): void {
       localStorage.selectedFloorId = e.target.value;
-    },
-  },
+    }
+  }
 });
 </script>
 

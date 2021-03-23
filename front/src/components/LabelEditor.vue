@@ -11,10 +11,14 @@
       <label>
         <input class="label-edit__input" v-model="editedText" />
       </label>
-      <button @click="save" class="label-edit__save-button icon-button">
-      </button>
-      <button @click="cancel" class="label-edit__cancel-button icon-button">
-      </button>
+      <button
+        @click="save"
+        class="label-edit__save-button icon-button"
+      ></button>
+      <button
+        @click="cancel"
+        class="label-edit__cancel-button icon-button"
+      ></button>
     </div>
     <div v-else></div>
   </div>
@@ -24,12 +28,12 @@
 export default {
   name: "LabelEditor",
   props: {
-    text: String,
+    text: String
   },
   data() {
     return {
       editMode: false,
-      editedText: this.text,
+      editedText: this.text
     };
   },
   methods: {
@@ -39,8 +43,8 @@ export default {
     save() {
       this.editMode = false;
       this.$emit("edited", this.editedText);
-    },
-  },
+    }
+  }
 };
 </script>
 

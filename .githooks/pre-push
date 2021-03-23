@@ -1,0 +1,33 @@
+#!/bin/bash
+echo "Running pre-push hook..."
+
+cd back || exit 1
+
+#echo "Lint backend"
+#npm run lint -- --max-warnings 0
+#if test $? -eq 0; then
+#  echo "Backend lint success"
+#else
+#  echo "Backend lint failed"
+#  exit 1
+#fi
+
+echo "Check backend dependencies"
+npm run check-architecture
+if test $? -eq 0; then
+  echo "Backend dependencies success"
+else
+  echo "Backend dependencies failed"
+  exit 1
+fi
+
+cd ../front || exit 1
+
+echo "Lint webapp"
+npm run lint -- --max-warnings 0
+if test $? -eq 0; then
+  echo "Frontend lint success"
+else
+  echo "Frontend lint failed"
+  exit 1
+fi

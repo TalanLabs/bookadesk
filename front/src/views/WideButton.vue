@@ -15,8 +15,8 @@ export default {
   name: "WideButton",
   props: {
     title: String,
-    subtitle: String,
-  },
+    subtitle: String
+  }
 };
 </script>
 <style scoped="true">

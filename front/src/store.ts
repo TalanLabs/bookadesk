@@ -1,25 +1,27 @@
 import Vue from "vue";
-import Vuex, {ActionContext, MutationTree} from "vuex";
+import Vuex, { ActionContext } from "vuex";
 import {
   bookPlace,
   confirmPresence,
   deleteBooking,
   getBookings,
-  getNextBooking, getOffices, saveOffices,
+  getNextBooking,
+  getOffices,
+  saveOffices
 } from "@/services";
-import {Booking, Floor, Office} from '@/types';
+import { Booking, Floor, Office } from "@/types";
 
 Vue.use(Vuex);
 
 interface StateModel {
-  currentUser: {},
-  offices: Office[],
-  officesToSave: string[],
-  bookings: any,
-  isUserAdmin: boolean,
-  nextBooking: any,
-  selectedOfficeId: string,
-  selectedDate: string,
+  currentUser: {};
+  offices: Office[];
+  officesToSave: string[];
+  bookings: Record<string, Booking>;
+  isUserAdmin: boolean;
+  nextBooking: Booking | undefined;
+  selectedOfficeId: string;
+  selectedDate: string;
 }
 
 export default new Vuex.Store<StateModel>({
@@ -32,24 +34,24 @@ export default new Vuex.Store<StateModel>({
      */
     bookings: {},
     isUserAdmin: false,
-    nextBooking: {},
+    nextBooking: undefined,
     selectedOfficeId: "dumont_durville",
-    selectedDate: "",
+    selectedDate: ""
   },
   getters: {
-    currentUser: (state) => {
+    currentUser: state => {
       return state.currentUser;
     },
-    booking: (state) => (placeId: string, date: string) => {
+    booking: state => (placeId: string, date: string) => {
       return state.bookings[`${placeId}-${date}`];
     },
-    nextBooking: (state) => {
+    nextBooking: state => {
       return state.nextBooking;
     },
-    selectedOffice: (state) => {
+    selectedOffice: state => {
       return state.selectedOfficeId;
     },
-    selectedDate: (state) => {
+    selectedDate: state => {
       return state.selectedDate;
     },
     offices: state => {
@@ -58,7 +60,7 @@ export default new Vuex.Store<StateModel>({
   },
   mutations: {
     confirmBooking(state, bookingId) {
-      if (state.nextBooking.id === bookingId) {
+      if (state.nextBooking && state.nextBooking.id === bookingId) {
         Vue.set(state.nextBooking, "confirmed", true);
       }
     },
@@ -79,17 +81,21 @@ export default new Vuex.Store<StateModel>({
     },
     setOfficeToSave(state: StateModel, officeId: string) {
       // Guarantees unicity.
-      state.officesToSave.indexOf(officeId) === -1 && state.officesToSave.push(officeId);
+      state.officesToSave.indexOf(officeId) === -1 &&
+        state.officesToSave.push(officeId);
     },
     resetOfficeToSave(state: StateModel) {
       state.officesToSave = [];
     },
-    addFloor(state: StateModel, {floor, officeId}: {floor: Floor, officeId: string}) {
+    addFloor(
+      state: StateModel,
+      { floor, officeId }: { floor: Floor; officeId: string }
+    ) {
       state.offices.filter(o => o.id === officeId)[0].floors.push(floor);
     },
     deleteBooking(state, bookingId) {
-      for (const [key, value] of state.bookings.entries()) {
-        if (value.id === bookingId) {
+      for (const key in state.bookings) {
+        if (state.bookings[key].id === bookingId) {
           delete state.bookings[key];
           return;
         }
@@ -107,7 +113,7 @@ export default new Vuex.Store<StateModel>({
     },
     setUserAdmin(state) {
       state.isUserAdmin = true;
-    },
+    }
   },
   actions: {
     setCurrentUser(context, user) {
@@ -128,15 +134,22 @@ export default new Vuex.Store<StateModel>({
       context.commit("setOffices", offices);
     },
     async saveOffices(context: ActionContext<StateModel, StateModel>) {
-      await saveOffices(context.state.offices.filter(o => context.state.officesToSave.includes(o.id)));
+      await saveOffices(
+        context.state.offices.filter(o =>
+          context.state.officesToSave.includes(o.id)
+        )
+      );
       context.commit("resetOfficeToSave");
     },
     addOffice(context, office: Office) {
       context.commit("addOffice", office);
       context.commit("setOfficeToSave", office.id);
     },
-    addFloor(context: ActionContext<StateModel, StateModel>, {floor, officeId}: {floor: Floor, officeId: string}) {
-      context.commit("addFloor", {floor, officeId});
+    addFloor(
+      context: ActionContext<StateModel, StateModel>,
+      { floor, officeId }: { floor: Floor; officeId: string }
+    ) {
+      context.commit("addFloor", { floor, officeId });
       context.commit("setOfficeToSave", officeId);
     },
     async fetchNextBooking(context) {
@@ -165,6 +178,6 @@ export default new Vuex.Store<StateModel>({
       } else {
         context.commit("confirmBooking", context.state.nextBooking.id);
       }
-    },
-  },
+    }
+  }
 });

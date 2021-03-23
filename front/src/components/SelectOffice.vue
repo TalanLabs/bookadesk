@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "SelectOffice",
@@ -38,8 +38,8 @@ export default {
         return {
           name: o.name,
           id: o.id
-        }
-      })
+        };
+      });
     }
   },
   methods: {
@@ -48,8 +48,8 @@ export default {
       this.$store.commit("setSelectedOffice", e.target.value);
       localStorage.selectedFloorId = "";
       this.$emit("selectedOffice", e.target.value);
-    },
-  },
+    }
+  }
 };
 </script>
 

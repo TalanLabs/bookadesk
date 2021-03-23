@@ -8,7 +8,7 @@
     "nodemon": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "test": "echo 'No tests'",
     "build": "./node_modules/.bin/tsc",
-    "check-archi": "./node_modules/.bin/dependency-cruiser --config .dependency-cruiser.js src"
+    "check-architecture": "./node_modules/.bin/dependency-cruiser --config .dependency-cruiser.js src"
   },
   "author": "Talan Labs",
   "license": "ISC",

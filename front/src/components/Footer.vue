@@ -1,8 +1,6 @@
 <template>
   <div class="footer col">
-    <div class="version">
-      bookAdesk version {{ version }}
-    </div>
+    <div class="version">bookAdesk version {{ version }}</div>
   </div>
 </template>
 
@@ -16,9 +14,9 @@ export default {
   },
   data() {
     return {
-      version: "???",
+      version: "???"
     };
-  },
+  }
 };
 </script>
 

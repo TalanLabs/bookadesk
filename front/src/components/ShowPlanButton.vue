@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "ShowPlanButton",
+  name: "ShowPlanButton"
 };
 </script>
 

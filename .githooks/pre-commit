@@ -1,0 +1,19 @@
+#!/bin/bash
+echo "Pre commit hook!"
+
+## this will retrieve all of the .ts / .tsx files that have been
+## changed since the last commit
+STAGED_TS_FILES=$(git diff --cached --diff-filter=AM --name-only -- '*.ts' '*.tsx' '*.css' '*.vue')
+
+## we can check to see if this is empty
+if [[ $STAGED_TS_FILES == "" ]]; then
+  echo "No updated files to prettify"
+## otherwise we can do stuff with these changed ts files
+else
+  for file in $STAGED_TS_FILES; do
+    ## format our file
+    echo "$file" | xargs ./front/node_modules/.bin/prettier --write
+    ## add any potential changes from our formatting to the commit
+    echo "$file" | xargs git add
+  done
+fi

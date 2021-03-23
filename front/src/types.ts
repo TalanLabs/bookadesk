@@ -1,4 +1,5 @@
 export interface Booking {
+  id: string;
   officeId: string;
   placeId: string;
   date: string;
@@ -32,4 +33,5 @@ export interface DayStats {
 }
 
 export class PlaceAlreadyBookedError extends Error {}
+
 export class DayAlreadyBookedError extends Error {}

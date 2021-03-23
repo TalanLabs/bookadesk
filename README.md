@@ -16,7 +16,7 @@ NODE_ENV=dev
 
 Run the backend with `npm start`
 
-# Frontend (webapp)
+## Frontend (webapp)
 
 Create a `.env.local` file in `/front`, and set VUE_APP_API_URL to the backend local url 
 
@@ -27,6 +27,10 @@ npm install
 # run
 npm run serve
 ```
+
+# Setup Git hooks
+
+`git config core.hooksPath .githooks`
 
 # Infra (with terraform)
 
