@@ -1,40 +1,52 @@
-import express from "express";
+import express, { Router } from "express";
 import formidableMiddleware from "express-formidable";
 import { getNextBooking } from "./usecase/GetNextBooking";
 import { deleteBooking } from "./usecase/DeleteBooking";
 import {
   DayAlreadyBookedError,
   NotAuthorizedError,
-  PlaceAlreadyBookedError,
-} from './domain/errors'
-import { confirmPresence } from './usecase/ConfirmPresence'
-import { getOffices } from './usecase/GetOffices'
-import { getOffice } from './usecase/GetOffice'
-import { updatePlaces } from './usecase/UpdatePlaces'
-import { getBookings } from './usecase/GetBookings'
-import { Booking } from './domain/domain'
-import { bookPlace } from './usecase/BookPlace'
-import { Keycloak } from 'keycloak-connect'
-import { BookingRepo } from './usecase/ports/BookingRepo'
-import { OfficeRepo } from './usecase/ports/OfficeRepo'
-import { getStats } from './usecase/GetStats'
-import { SuppliesRepo } from './usecase/ports/SuppliesRepo'
-import { notifyMissingSupplies } from './usecase/NotifyMissingSupplies'
-import { getMissingSupplies } from './usecase/GetMissingSupplies'
-import { createOrUpdateOffices } from './usecase/CreateOrUpdateOffices'
-import { saveFloorPlan } from './usecase/SaveFloorPlan'
-import { getFloorPlan } from './usecase/GetFloorPlan'
-import { ImageRepo } from './usecase/ports/ImageRepo'
-import { updateFloorName } from './usecase/updateFloorName'
+  PlaceAlreadyBookedError
+} from "./domain/errors";
+import { confirmPresence } from "./usecase/ConfirmPresence";
+import { getOffices } from "./usecase/GetOffices";
+import { getOffice } from "./usecase/GetOffice";
+import { updatePlaces } from "./usecase/UpdatePlaces";
+import { getBookings } from "./usecase/GetBookings";
+import { Booking } from "./domain/domain";
+import { bookPlace } from "./usecase/BookPlace";
+import { Keycloak } from "keycloak-connect";
+import { BookingRepo } from "./usecase/ports/BookingRepo";
+import { OfficeRepo } from "./usecase/ports/OfficeRepo";
+import { getStats } from "./usecase/GetStats";
+import { SuppliesRepo } from "./usecase/ports/SuppliesRepo";
+import { notifyMissingSupplies } from "./usecase/NotifyMissingSupplies";
+import { getMissingSupplies } from "./usecase/GetMissingSupplies";
+import { createOrUpdateOffices } from "./usecase/CreateOrUpdateOffices";
+import { saveFloorPlan } from "./usecase/SaveFloorPlan";
+import { getFloorPlan } from "./usecase/GetFloorPlan";
+import { ImageRepo } from "./usecase/ports/ImageRepo";
+import { updateFloorName } from "./usecase/updateFloorName";
+
+interface AuthenticatedRequest extends express.Request {
+  kauth: {
+    grant: {
+      access_token: {
+        content: {
+          email;
+        };
+      };
+    };
+  };
+}
 
 function updatePlacesController(officeRepo: OfficeRepo) {
-  return async (req: any, res) => {
+  return async (req: AuthenticatedRequest, res) => {
     try {
       const user = req.kauth.grant.access_token.content;
       if (!isUserAdmin(user)) {
         return res.status(403).send({
           code: "NOT_AUTHORIZED",
-          message: "Only admins can update an office",
+          message: "Only admins can update an office"
         });
       }
       const office = await updatePlaces(
@@ -56,7 +68,7 @@ function nextBookingController(
   bookingRepo: BookingRepo,
   officeRepo: OfficeRepo
 ) {
-  return async (req: any, res) => {
+  return async (req: AuthenticatedRequest, res) => {
     try {
       const user = req.kauth.grant.access_token.content;
       const nextBooking = await getNextBooking(
@@ -73,7 +85,7 @@ function nextBookingController(
 }
 
 function deleteBookingController(bookingRepo: BookingRepo) {
-  return async (req: any, res) => {
+  return async (req: AuthenticatedRequest, res) => {
     try {
       const user = req.kauth.grant.access_token.content;
       await deleteBooking(
@@ -88,7 +100,7 @@ function deleteBookingController(bookingRepo: BookingRepo) {
       if (error instanceof NotAuthorizedError) {
         return res.status(400).send({
           code: "NOT_AUTHORIZED",
-          message: "User not authorized to delete this booking",
+          message: "User not authorized to delete this booking"
         });
       } else {
         console.log(error);
@@ -99,7 +111,7 @@ function deleteBookingController(bookingRepo: BookingRepo) {
 }
 
 function confirmBookingController(bookingRepo: BookingRepo) {
-  return async (req: any, res) => {
+  return async (req: AuthenticatedRequest, res) => {
     try {
       const user = req.kauth.grant.access_token.content;
       const office = await confirmPresence(
@@ -140,19 +152,19 @@ function getOfficeController(officeRepo: OfficeRepo) {
 }
 
 function createOrUpdateOfficesController(officeRepo: OfficeRepo) {
-  return async (req: any, res) => {
+  return async (req: AuthenticatedRequest, res) => {
     try {
       const user = req.kauth.grant.access_token.content;
       if (!isUserAdmin(user)) {
         return res.status(403).send({
           code: "NOT_AUTHORIZED",
-          message: "Only admins can update an office",
+          message: "Only admins can update an office"
         });
       }
       const offices = await createOrUpdateOffices(req.body, officeRepo);
       console.info(
         `User ${user.email} created or updated offices ${req.body
-          .map((o) => o.id)
+          .map(o => o.id)
           .join(",")}`
       );
       return res.status(200).send(offices);
@@ -179,14 +191,14 @@ function getBookingsController(bookingRepo: BookingRepo) {
 }
 
 function bookPlaceController(bookingRepo: BookingRepo) {
-  return async (req: any, res) => {
+  return async (req: AuthenticatedRequest, res) => {
     try {
       const user = req.kauth.grant.access_token.content;
       const booking: Booking = {
         placeId: req.body.placeId,
         date: req.body.date,
         email: user.email,
-        officeId: req.params.id,
+        officeId: req.params.id
       };
       if (!booking.date || !booking.placeId) {
         return res.status(400).send("Missing parameter date or placeId");
@@ -199,12 +211,12 @@ function bookPlaceController(bookingRepo: BookingRepo) {
       if (error instanceof PlaceAlreadyBookedError) {
         return res.status(400).send({
           code: "PLACE_ALREADY_BOOKED",
-          message: "This place has already been booked",
+          message: "This place has already been booked"
         });
       } else if (error instanceof DayAlreadyBookedError) {
         return res.status(400).send({
           code: "DAY_ALREADY_BOOKED",
-          message: "User has already booked a place for this day",
+          message: "User has already booked a place for this day"
         });
       } else {
         console.log(error);
@@ -229,7 +241,7 @@ function notifyMissingSuppliesController(suppliesRepo: SuppliesRepo) {
         {
           officeId: req.body.officeId,
           type: req.body.type,
-          comments: req.body.comments,
+          comments: req.body.comments
         },
         suppliesRepo
       );
@@ -249,7 +261,7 @@ function statsController(bookingRepo: BookingRepo, officeRepo: OfficeRepo) {
       if (!officeId || !date) {
         return res.status(400).send({
           code: "MISSING_PARAMETERS",
-          message: "Missing query parameters: date or officeId",
+          message: "Missing query parameters: date or officeId"
         });
       }
       const stats = await getStats(officeId, date, bookingRepo, officeRepo);
@@ -268,7 +280,7 @@ function getMissingSuppliesController(suppliesRepo: SuppliesRepo) {
       if (!officeId) {
         return res.status(400).send({
           code: "MISSING_PARAMETERS",
-          message: "Missing query parameter officeId",
+          message: "Missing query parameter officeId"
         });
       }
       const missingSupplies = await getMissingSupplies(officeId, suppliesRepo);
@@ -290,15 +302,15 @@ function uploadFloorPlan(imageRepo: ImageRepo) {
         if (!isUserAdmin(user)) {
           return res.status(403).send({
             code: "NOT_AUTHORIZED",
-            message: "Only admins can update an office",
+            message: "Only admins can update an office"
           });
         }
         return res.status(400).send({
           code: "MISSING_PARAMETERS",
-          message: "Missing query parameter floorId",
+          message: "Missing query parameter floorId"
         });
       }
-      await saveFloorPlan(floorId, plan, imageRepo);
+      await saveFloorPlan(floorId, plan.path, imageRepo);
       return res.status(201).send();
     } catch (e) {
       console.error(`Failed to upload floor's plan for floorId=${floorId}`, e);
@@ -315,13 +327,13 @@ function fetchFloorPlan(imageRepo: ImageRepo) {
       if (!floorId) {
         return res.status(400).send({
           code: "MISSING_PARAMETERS",
-          message: "Missing query parameter floorId",
+          message: "Missing query parameter floorId"
         });
       }
       if (!officeId) {
         return res.status(400).send({
           code: "MISSING_PARAMETERS",
-          message: "Missing query parameter officeId",
+          message: "Missing query parameter officeId"
         });
       }
       const plan = await getFloorPlan(floorId, imageRepo);
@@ -338,36 +350,36 @@ function fetchFloorPlan(imageRepo: ImageRepo) {
 
 function updateFloorNameController(officeRepo: OfficeRepo) {
   return async (req, res) => {
-    const floorId = req.params.floorId as string
-    const officeId = req.params.officeId as string
-    const { floorName } = req.body
+    const floorId = req.params.floorId as string;
+    const officeId = req.params.officeId as string;
+    const { floorName } = req.body;
     try {
-      const user = req.kauth.grant.access_token.content
+      const user = req.kauth.grant.access_token.content;
       if (!isUserAdmin(user)) {
         return res.status(403).send({
-          code: 'NOT_AUTHORIZED',
-          message: 'Only admins can update an office',
-        })
+          code: "NOT_AUTHORIZED",
+          message: "Only admins can update an office"
+        });
       }
       if (!floorId) {
         return res.status(400).send({
-          code: 'MISSING_PARAMETERS',
-          message: 'Missing query parameter floorId',
-        })
+          code: "MISSING_PARAMETERS",
+          message: "Missing query parameter floorId"
+        });
       }
       if (!officeId) {
         return res.status(400).send({
-          code: 'MISSING_PARAMETERS',
-          message: 'Missing query parameter offcieId',
-        })
+          code: "MISSING_PARAMETERS",
+          message: "Missing query parameter offcieId"
+        });
       }
-      await updateFloorName(officeId,floorId, floorName, officeRepo)
-      return res.status(201).send()
+      await updateFloorName(officeId, floorId, floorName, officeRepo);
+      return res.status(201).send();
     } catch (e) {
-      console.error(`Failed to update floor name with floorId=${floorId}`, e)
-      return sendUnexpectedError(res)
+      console.error(`Failed to update floor name with floorId=${floorId}`, e);
+      return sendUnexpectedError(res);
     }
-  }
+  };
 }
 
 export function createRoutes(
@@ -376,7 +388,7 @@ export function createRoutes(
   officeRepo: OfficeRepo,
   suppliesRepo: SuppliesRepo,
   imageRepo: ImageRepo
-) {
+): Router {
   const router = express.Router();
   router.get("/health", (req, res) => res.status(200).send("Up"));
   router.get(
@@ -431,14 +443,14 @@ export function createRoutes(
     fetchFloorPlan(imageRepo)
   );
   router.put(
-    '/offices/:officeId/floors/:floorId/name',
+    "/offices/:officeId/floors/:floorId/name",
     keycloak.protect(),
-    updateFloorNameController(officeRepo),
-  )
+    updateFloorNameController(officeRepo)
+  );
   return router;
 }
 
-const isUserAdmin = (userInfo: any): boolean => {
+const isUserAdmin = (userInfo): boolean => {
   return userInfo.resource_access["desk-booking-front"]?.roles?.includes(
     "admin"
   );

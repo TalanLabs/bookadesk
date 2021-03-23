@@ -1,9 +1,9 @@
 import { ImageRepo } from "./ports/ImageRepo";
 
 export const saveFloorPlan = async (
-    floorId: string,
-    image: File,
-    imageRepo: ImageRepo
+  floorId: string,
+  imagePath: string,
+  imageRepo: ImageRepo
 ): Promise<void> => {
-    return imageRepo.uploadFloorPlan(floorId, image)
+  return imageRepo.uploadFloorPlan(floorId, imagePath);
 };

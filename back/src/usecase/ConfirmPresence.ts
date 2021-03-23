@@ -18,7 +18,5 @@ export const confirmPresence = async (
   if (todayString !== booking.date) {
     throw new NotAuthorizedError();
   }
-  if (booking.date) {
-  }
   await bookingRepo.confirmPresence(bookingId);
 };

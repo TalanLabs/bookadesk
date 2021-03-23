@@ -1,7 +1,6 @@
 import { Booking, BookingDetails } from "../domain/domain";
 import { BookingRepo } from "./ports/BookingRepo";
 import { OfficeRepo } from "./ports/OfficeRepo";
-import { getOffice } from "./GetOffice";
 
 export const getNextBooking = async (
   email: string,
@@ -28,7 +27,7 @@ const getPlaceDetails = async (
           officeName: office.name,
           floorName: floor.name,
           room: place.room,
-          placeName: place.number,
+          placeName: place.number
         };
       }
     }
