@@ -22,7 +22,7 @@
         <img
           class="plan"
           @click="showPlan = !showPlan"
-          :src="'plans/' + floor.id + '.png'"
+          v-bind:src="planImageUrl"
           alt="Plan non disponible"
         />
         <div v-for="place in floor.places" :key="'place-text-' + place.id">
@@ -143,7 +143,7 @@
 import Vue from "vue";
 import { mapGetters } from "vuex";
 
-import { getOffice } from "@/services";
+import { getFloorPlan, getOffice } from "@/services";
 import CancelBooking from "@/components/CancelBooking.vue";
 import {
   Booking,
@@ -174,13 +174,16 @@ export default Vue.extend({
         this.selectedFloorId = localStorage.selectedFloorId;
       }
     }
+    const planImage = await getFloorPlan(this.selectedFloorId, this.office.id);
+    this.planImageUrl = "data:image/png;base64," + planImage;
   },
   data() {
     return {
       office: {} as Office,
       selectedPlaceId: "",
       showPlan: true,
-      selectedFloorId: ""
+      selectedFloorId: "",
+      planImageUrl: ""
     };
   },
   computed: {

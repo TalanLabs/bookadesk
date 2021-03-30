@@ -30,12 +30,19 @@ export const getOffice = async (officeId: string) => {
     console.error("Could not fetch places list", error);
   }
 };
-export const getOffices = async () => {
+export const getOffices = async (): Promise<Office[] | undefined> => {
   try {
     const response = await axios.get(`${apiUrl}/offices`);
-    return response.data;
+    const offices = response.data;
+    const promises = offices.map(async (o: Office) => {
+      const res = await axios.get(`${apiUrl}/offices/${o.id}`);
+      return res.data;
+    });
+    const officesWithFloors: Office[] = await Promise.all(promises);
+    console.log("offices", officesWithFloors);
+    return officesWithFloors;
   } catch (error) {
-    console.error("Could not fetch places list", error);
+    console.error("Could not fetch offices list", error);
   }
 };
 
@@ -183,7 +190,7 @@ export const uploadFile = async (
 export const getFloorPlan = async (
   floorId: string,
   officeId: string
-): Promise<Floor> => {
+): Promise<string> => {
   try {
     const res = await axios.get(
       `${apiUrl}/offices/${officeId}/floors/${floorId}/plan`

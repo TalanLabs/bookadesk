@@ -11,6 +11,11 @@ export interface OfficeRepo {
     floorId: string
   ): Promise<void>;
 
+  /**
+   * Create or update an office and its floors
+   * @param offices
+   * @param saveFloors
+   */
   createOrUpdateOffices(offices: Office[], saveFloors: boolean): Promise<void>;
 
   updateFloorName(
