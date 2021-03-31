@@ -5,8 +5,8 @@ export const checkDirectoryExists = (path: string): Promise<void> => {
     fs.access(path, function(err) {
       if (err && err.code === "ENOENT") {
         fs.mkdirSync(path, { recursive: true });
-        resolve();
       }
+      resolve();
     });
   });
 };
