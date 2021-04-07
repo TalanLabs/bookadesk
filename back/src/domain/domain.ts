@@ -7,12 +7,13 @@ export interface Place {
     top?: number;
     left?: number;
   };
+  floorId: string;
+  officeId: string;
 }
 
 export interface Floor {
   name: string;
   id: string;
-  places: Place[];
 }
 
 export interface Office {
@@ -48,12 +49,9 @@ export interface MissingSupply {
 
 /**
  * Bookings with details
- * Maybe should not be in domain?
  */
-export interface BookingDetails extends Booking {
-  officeName: string;
-  floorName: string;
-  room?: string;
-  placeDescription?: string;
-  placeName: string;
+export interface BookingDetails {
+  booking: Booking;
+  office: Office;
+  place: Place;
 }

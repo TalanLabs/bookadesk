@@ -7,19 +7,21 @@ import {
   getBookings,
   getNextBooking,
   getOffices,
+  getPlaces,
   saveOffices
 } from "@/services";
-import { Booking, Floor, Office } from "@/types";
+import { Booking, BookingDetails, Floor, Office, Place } from "@/types";
 
 Vue.use(Vuex);
 
 interface StateModel {
   currentUser: {};
   offices: Office[];
+  places: Record<string, Place[]>; // Key: floorId
   officesToSave: string[];
   bookings: Record<string, Booking>;
   isUserAdmin: boolean;
-  nextBooking: Booking | undefined;
+  nextBooking: BookingDetails | undefined;
   selectedOfficeId: string;
   selectedDate: string;
 }
@@ -33,6 +35,7 @@ export default new Vuex.Store<StateModel>({
      * Booking by place
      */
     bookings: {},
+    places: {},
     isUserAdmin: false,
     nextBooking: undefined,
     selectedOfficeId: "dumont_durville",
@@ -44,6 +47,9 @@ export default new Vuex.Store<StateModel>({
     },
     booking: state => (placeId: string, date: string) => {
       return state.bookings[`${placeId}-${date}`];
+    },
+    floorPlaces: state => (floorId: string) => {
+      return state.places[floorId];
     },
     nextBooking: state => {
       return state.nextBooking;
@@ -86,6 +92,36 @@ export default new Vuex.Store<StateModel>({
     },
     resetOfficeToSave(state: StateModel) {
       state.officesToSave = [];
+    },
+    setPlaces(state, { floorId, places }) {
+      // const office = state.offices.find((o) => o.id === officeId);
+      // if (!office) {
+      //   return;
+      // }
+      // const map = state.offices
+      //   .filter((o: Office) => o.id == officeId)
+      //   .map((o: Office) =>
+      //     o.floors
+      //       .filter((f: Floor) => f.id === floorId)
+      //       .map((f: Floor) => {
+      //         const newVar = { ...f, places };
+      //         console.log("found floor", newVar);
+      //         return newVar;
+      //       })
+      //   );
+      //
+      // for (const office of state.offices) {
+      //   if (officeId === office.id) {
+      //     for (const floor of office.floors) {
+      //       if (floor.id === floorId) {
+      //       }
+      //     }
+      //   }
+      // }
+
+      console.log("setting places", state.places, floorId, places);
+      Vue.set(state.places, floorId, places);
+      console.log("set places", state.places);
     },
     addFloor(
       state: StateModel,
@@ -133,6 +169,20 @@ export default new Vuex.Store<StateModel>({
       const offices = await getOffices();
       context.commit("setOffices", offices);
     },
+
+    async fetchPlaces(
+      context: ActionContext<StateModel, StateModel>,
+      payload: { officeId: string; floorId: string }
+    ) {
+      console.log("fetching places", payload.officeId, payload.floorId);
+      const places = await getPlaces(payload.officeId, payload.floorId);
+      context.commit("setPlaces", {
+        officeId: payload.officeId,
+        floorId: payload.floorId,
+        places: places
+      });
+    },
+
     async saveOffices(context: ActionContext<StateModel, StateModel>) {
       await saveOffices(
         context.state.offices.filter(o =>

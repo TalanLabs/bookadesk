@@ -24,7 +24,7 @@
         +
       </div>
     </WideButton>
-    <div class="subtitle">Mes prochaines réservations</div>
+    <div class="subtitle">Ma prochaine réservation</div>
     <div class="bookings">
       <BookingCard></BookingCard>
     </div>

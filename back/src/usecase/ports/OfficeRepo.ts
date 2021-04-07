@@ -23,4 +23,8 @@ export interface OfficeRepo {
     floorId: string,
     floorName: string
   ): Promise<void>;
+
+  getPlace(placeId: string): Promise<Place>;
+
+  getFloorPlaces(floorId: string): Promise<Place[]>;
 }

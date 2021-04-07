@@ -46,6 +46,10 @@ export class PostgresOfficeRepo implements OfficeRepo {
   }
 
   async getOffice(officeId: string): Promise<Office> {
+    if (!officeId) {
+      throw new Error(`Can not get office: empty office ID`);
+    }
+
     const text = "SELECT * FROM offices WHERE offices.id= $1 ";
     const values = [officeId];
     let office;
@@ -65,9 +69,6 @@ export class PostgresOfficeRepo implements OfficeRepo {
       return Promise.resolve(office);
     }
 
-    for (const f of floors) {
-      f.places = await this.getFloorPlaces(f.id);
-    }
     office.floors = floors;
     return Promise.resolve(office);
   }
@@ -92,6 +93,7 @@ export class PostgresOfficeRepo implements OfficeRepo {
     await Promise.all(
       places.map(async p => {
         const exists = await this.placeExists(p.id);
+        console.log("place", p.id, "exists", exists);
         if (exists) {
           return this.updatePlace(p, floorId, officeId);
         } else {
@@ -248,7 +250,7 @@ export class PostgresOfficeRepo implements OfficeRepo {
     officeId: string
   ): Promise<void> {
     const text =
-      "UPDATE places SET id=$1, num=$2, floor_id=$3, office_id=$4, room=$5, left_pos=$6, top_pos= $7";
+      "UPDATE places SET num=$2, floor_id=$3, office_id=$4, room=$5, left_pos=$6, top_pos= $7 where id=$1";
     const values = [
       place.id,
       place.number,
@@ -273,7 +275,9 @@ export class PostgresOfficeRepo implements OfficeRepo {
       position: {
         left: parseFloat(dbPlace.left_pos.toString()),
         top: parseFloat(dbPlace.top_pos.toString())
-      }
+      },
+      officeId: dbPlace.office_id,
+      floorId: dbPlace.floor_id
     };
   }
 
@@ -301,8 +305,7 @@ export class PostgresOfficeRepo implements OfficeRepo {
   private static floorFromDb(dbFloor: DbFloor): Floor {
     return {
       id: dbFloor.id,
-      name: dbFloor.name,
-      places: []
+      name: dbFloor.name
     };
   }
 }

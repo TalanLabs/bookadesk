@@ -21,6 +21,9 @@ import { FileImageRepo } from "./adapters/FileImageRepo";
 import { ImageRepo } from "./usecase/ports/ImageRepo";
 import { initDb } from "./infra/postgres";
 import { checkDirectoryExists } from "./infra/file";
+import { PostgresBookingRepo } from "./adapters/PostgresBookingRepo";
+import { BookingRepo } from "./usecase/ports/BookingRepo";
+import { OfficeRepo } from "./usecase/ports/OfficeRepo";
 
 async function startApp() {
   dotenv.config();
@@ -81,13 +84,19 @@ async function startApp() {
   }
 
   // Init repos
-  let officeRepo;
+  console.info("Initialize repositories...");
+  let officeRepo: OfficeRepo;
   if (process.env.OFFICES_REPO === "POSTGRES") {
     officeRepo = new PostgresOfficeRepo(pgClient);
   } else {
     officeRepo = new DynamoDbOfficeRepo(docClient, config.dbPrefix);
   }
-  const bookingRepo = new DynamoDbBookingRepo(docClient, config.dbPrefix);
+  let bookingRepo: BookingRepo;
+  if (process.env.BOOKINGS_REPO === "POSTGRES") {
+    bookingRepo = new PostgresBookingRepo(pgClient);
+  } else {
+    bookingRepo = new DynamoDbBookingRepo(docClient, config.dbPrefix);
+  }
   const suppliesRepo = new DynamoDbSuppliesRepo(docClient, config.dbPrefix);
   let imageRepo: ImageRepo;
   if (process.env.IMAGE_REPO === "S3") {
@@ -97,6 +106,7 @@ async function startApp() {
     await checkDirectoryExists(filesPath);
     imageRepo = new FileImageRepo(filesPath);
   }
+  console.info("Repositories initialized");
 
   // Routes
   const router = createRoutes(
@@ -109,7 +119,7 @@ async function startApp() {
   app.use(router);
 }
 
-startApp();
+startApp().then(() => console.info("Server started"));
 
 function cleanTerminate(signal: NodeJS.Signals): void {
   console.log("cleaning before terminating process ...", { signal: signal });

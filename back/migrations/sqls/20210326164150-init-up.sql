@@ -24,6 +24,7 @@ create table bookings
     date varchar not null,
     email varchar not null,
     place_id varchar not null,
+    office_id varchar not null,
     confirmed boolean default false
 );
 
