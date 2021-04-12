@@ -1,6 +1,6 @@
-import { ImageRepo } from "../usecase/ports/ImageRepo";
 import AWS from "aws-sdk";
 import fs from "fs";
+import { ImageRepo } from "../usecase/ports/ImageRepo";
 
 export class S3ImageRepo implements ImageRepo {
   constructor(private s3Suffix: string) {}

@@ -1,9 +1,10 @@
 import axios from "axios";
 import config from "@/config";
 import {
+  BookingDetails,
   DayAlreadyBookedError,
-  Floor,
   Office,
+  Place,
   PlaceAlreadyBookedError
 } from "@/types";
 import { MissingSupply } from "../../back/src/domain/domain";
@@ -30,9 +31,30 @@ export const getOffice = async (officeId: string) => {
     console.error("Could not fetch places list", error);
   }
 };
-export const getOffices = async () => {
+export const getOffices = async (): Promise<Office[] | undefined> => {
   try {
     const response = await axios.get(`${apiUrl}/offices`);
+    const offices = response.data;
+    const promises = offices.map(async (o: Office) => {
+      const res = await axios.get(`${apiUrl}/offices/${o.id}`);
+      return res.data;
+    });
+    const officesWithFloors: Office[] = await Promise.all(promises);
+    console.log("offices", officesWithFloors);
+    return officesWithFloors;
+  } catch (error) {
+    console.error("Could not fetch offices list", error);
+  }
+};
+
+export const getPlaces = async (
+  officeId: string,
+  floorId: string
+): Promise<Place[] | undefined> => {
+  try {
+    const response = await axios.get(
+      `${apiUrl}/offices/${officeId}/floors/${floorId}/places`
+    );
     return response.data;
   } catch (error) {
     console.error("Could not fetch places list", error);
@@ -58,7 +80,7 @@ export const getBookings = async (officeId: string, date: string) => {
     console.error("Could not fetch bookings", error);
   }
 };
-export const getNextBooking = async () => {
+export const getNextBooking = async (): Promise<BookingDetails | undefined> => {
   try {
     const response = await axios.get(`${apiUrl}/bookings/next`);
     return response.data;
@@ -148,12 +170,13 @@ export const getMissingSupplies = async (
 
 export const saveFloorPlaces = async (
   officeId: string,
-  floor: Floor
+  floorId: string,
+  places: Place[]
 ): Promise<void | Error> => {
   try {
     await axios.put(
-      `${apiUrl}/offices/${officeId}/floors/${floor.id}/places`,
-      floor.places
+      `${apiUrl}/offices/${officeId}/floors/${floorId}/places`,
+      places
     );
   } catch (e) {
     return new Error("Unexpected error");
@@ -183,7 +206,7 @@ export const uploadFile = async (
 export const getFloorPlan = async (
   floorId: string,
   officeId: string
-): Promise<Floor> => {
+): Promise<string> => {
   try {
     const res = await axios.get(
       `${apiUrl}/offices/${officeId}/floors/${floorId}/plan`

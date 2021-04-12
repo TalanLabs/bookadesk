@@ -6,6 +6,15 @@ export interface Booking {
   email?: string;
 }
 
+export interface BookingDetails {
+  id: string;
+  officeName: string;
+  floorName: string;
+  placeName: string;
+  date: string;
+  email?: string;
+}
+
 export interface Place {
   id: string;
   number: string;

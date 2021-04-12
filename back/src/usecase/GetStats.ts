@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 import { OfficeRepo } from "./ports/OfficeRepo";
 import { Office } from "../domain/domain";
 import { BookingRepo } from "./ports/BookingRepo";
@@ -19,15 +17,18 @@ export const getStats = async (
   officeRepo: OfficeRepo
 ): Promise<DayStats> => {
   const office: Office = await officeRepo.getOffice(officeId);
+  const places = await Promise.all(
+    office.floors.map(f => officeRepo.getFloorPlaces(f.id))
+  );
   const bookings = await bookingRepo.getBookings(officeId, date);
 
-  const placesNumber = _.flatten(office.floors.map((f) => f.places)).length;
-  const confirmedBookingsNumber = bookings.filter((b) => b.confirmed).length;
+  const placesNumber = places.length;
+  const confirmedBookingsNumber = bookings.filter(b => b.confirmed).length;
   return {
     date,
     officeId,
     places: placesNumber,
     bookings: bookings.length,
-    confirmedBookings: confirmedBookingsNumber,
+    confirmedBookings: confirmedBookingsNumber
   };
 };

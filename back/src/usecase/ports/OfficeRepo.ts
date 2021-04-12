@@ -11,6 +11,11 @@ export interface OfficeRepo {
     floorId: string
   ): Promise<void>;
 
+  /**
+   * Create or update an office and its floors
+   * @param offices
+   * @param saveFloors
+   */
   createOrUpdateOffices(offices: Office[], saveFloors: boolean): Promise<void>;
 
   updateFloorName(
@@ -18,4 +23,8 @@ export interface OfficeRepo {
     floorId: string,
     floorName: string
   ): Promise<void>;
+
+  getPlace(placeId: string): Promise<Place>;
+
+  getFloorPlaces(floorId: string): Promise<Place[]>;
 }

@@ -1,6 +1,5 @@
 import express, { Router } from "express";
 import formidableMiddleware from "express-formidable";
-import { getNextBooking } from "./usecase/GetNextBooking";
 import { deleteBooking } from "./usecase/DeleteBooking";
 import {
   DayAlreadyBookedError,
@@ -24,20 +23,14 @@ import { getMissingSupplies } from "./usecase/GetMissingSupplies";
 import { createOrUpdateOffices } from "./usecase/CreateOrUpdateOffices";
 import { saveFloorPlan } from "./usecase/SaveFloorPlan";
 import { getFloorPlan } from "./usecase/GetFloorPlan";
-import { ImageRepo } from "./usecase/ports/ImageRepo";
 import { updateFloorName } from "./usecase/updateFloorName";
-
-interface AuthenticatedRequest extends express.Request {
-  kauth: {
-    grant: {
-      access_token: {
-        content: {
-          email;
-        };
-      };
-    };
-  };
-}
+import { ImageRepo } from "./usecase/ports/ImageRepo";
+import { nextBookingController } from "./adapters/rest/NextBookingController";
+import { getFloorPlacesController } from "./adapters/rest/GetFloorPlacesController";
+import {
+  AuthenticatedRequest,
+  sendUnexpectedError
+} from "./adapters/rest/RestUtils";
 
 function updatePlacesController(officeRepo: OfficeRepo) {
   return async (req: AuthenticatedRequest, res) => {
@@ -57,26 +50,6 @@ function updatePlacesController(officeRepo: OfficeRepo) {
       );
       console.info(`User ${user.email} updated floor ${req.params.floorId}`);
       return res.status(200).send(office);
-    } catch (error) {
-      console.log(error);
-      return sendUnexpectedError(res);
-    }
-  };
-}
-
-function nextBookingController(
-  bookingRepo: BookingRepo,
-  officeRepo: OfficeRepo
-) {
-  return async (req: AuthenticatedRequest, res) => {
-    try {
-      const user = req.kauth.grant.access_token.content;
-      const nextBooking = await getNextBooking(
-        user.email,
-        bookingRepo,
-        officeRepo
-      );
-      return res.status(200).send(nextBooking);
     } catch (error) {
       console.log(error);
       return sendUnexpectedError(res);
@@ -200,8 +173,10 @@ function bookPlaceController(bookingRepo: BookingRepo) {
         email: user.email,
         officeId: req.params.id
       };
-      if (!booking.date || !booking.placeId) {
-        return res.status(400).send("Missing parameter date or placeId");
+      if (!booking.date || !booking.placeId || !booking.officeId) {
+        return res
+          .status(400)
+          .send("Missing parameter date or placeId or officeId");
       }
 
       await bookPlace(booking, bookingRepo);
@@ -224,10 +199,6 @@ function bookPlaceController(bookingRepo: BookingRepo) {
       }
     }
   };
-}
-
-function sendUnexpectedError(res: express.Response) {
-  return res.status(500).send({ message: "Unexpected server error" });
 }
 
 function sendNotFoundError(res: express.Response, message: string) {
@@ -439,8 +410,12 @@ export function createRoutes(
   );
   router.get(
     "/offices/:officeId/floors/:floorId/plan",
-    // keycloak.protect(),
     fetchFloorPlan(imageRepo)
+  );
+  router.get(
+    "/offices/:officeId/floors/:floorId/places",
+    keycloak.protect(),
+    getFloorPlacesController(officeRepo)
   );
   router.put(
     "/offices/:officeId/floors/:floorId/name",

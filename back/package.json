@@ -4,7 +4,9 @@
   "description": "Backend of booking system for Talan offices (post COVID-19)",
   "main": "index.js",
   "scripts": {
+    "prestart": "npx db-migrate up",
     "start": "ts-node src/index.ts",
+    "quickstart": "ts-node src/index.ts",
     "nodemon": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "test": "echo 'No tests'",
     "build": "./node_modules/.bin/tsc",
@@ -14,10 +16,13 @@
   "author": "Talan Labs",
   "license": "ISC",
   "dependencies": {
+    "@types/pg": "^7.14.11",
     "aws-sdk": "^2.680.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "date-fns": "^2.14.0",
+    "db-migrate": "^0.11.12",
+    "db-migrate-pg": "^1.2.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
@@ -25,6 +30,7 @@
     "keycloak-connect": "^10.0.1",
     "lodash": "^4.17.19",
     "morgan": "^1.10.0",
+    "pg": "^8.5.1",
     "uuid": "^8.0.0"
   },
   "devDependencies": {

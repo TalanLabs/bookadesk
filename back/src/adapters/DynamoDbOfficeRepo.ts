@@ -46,7 +46,7 @@ export class DynamoDbOfficeRepo implements OfficeRepo {
       };
       const dbOffices = (await this.documentClient.scan(params).promise())
         .Items as DbOffice[];
-      return Promise.all(dbOffices.map(o => this.officeFromDb(o, true)));
+      return Promise.all(dbOffices.map(o => this.officeFromDb(o)));
     } catch (e) {
       console.error("Failed to fetch office", e);
       throw new Error("Failed to fetch office");
@@ -67,7 +67,7 @@ export class DynamoDbOfficeRepo implements OfficeRepo {
       if (dbOffices.length !== 1) {
         throw new Error(`Should get one element with id ${officeId}`);
       }
-      return this.officeFromDb(dbOffices[0], true);
+      return this.officeFromDb(dbOffices[0]);
     } catch (e) {
       console.error("Failed to fetch office", e);
       throw new Error("Failed to fetch office");
@@ -126,10 +126,7 @@ export class DynamoDbOfficeRepo implements OfficeRepo {
     }
   }
 
-  async getFloorsByOffice(
-    officeId: string,
-    loadPlaces: boolean
-  ): Promise<Floor[]> {
+  async getFloorsByOffice(officeId: string): Promise<Floor[]> {
     try {
       const params = {
         TableName: this.floorsTableName,
@@ -141,7 +138,7 @@ export class DynamoDbOfficeRepo implements OfficeRepo {
 
       const promise = await this.documentClient.scan(params).promise();
       const dbFloors = promise.Items as DbFloor[];
-      return Promise.all(dbFloors.map(p => this.floorFromDb(p, loadPlaces)));
+      return Promise.all(dbFloors.map(p => this.floorFromDb(p)));
     } catch (e) {
       console.error("Failed to fetch floors", e);
       throw new Error("Failed to fetch floors");
@@ -155,7 +152,6 @@ export class DynamoDbOfficeRepo implements OfficeRepo {
         ExpressionAttributeValues: {
           ":f": floorId
         },
-        // ProjectionExpression: "#yr, title, info.rating",
         FilterExpression: "floorId = :f"
       };
 
@@ -203,7 +199,9 @@ export class DynamoDbOfficeRepo implements OfficeRepo {
       position: {
         left: dbPlace.left,
         top: dbPlace.top
-      }
+      },
+      officeId: dbPlace.officeId,
+      floorId: dbPlace.floorId
     };
   }
 
@@ -219,15 +217,12 @@ export class DynamoDbOfficeRepo implements OfficeRepo {
     };
   }
 
-  private async officeFromDb(
-    dbOffice: DbOffice,
-    loadFloors = false
-  ): Promise<Office> {
+  private async officeFromDb(dbOffice: DbOffice): Promise<Office> {
     return {
       id: dbOffice.id,
       name: dbOffice.name,
       description: dbOffice.description,
-      floors: loadFloors ? await this.getFloorsByOffice(dbOffice.id, true) : []
+      floors: await this.getFloorsByOffice(dbOffice.id)
     };
   }
 
@@ -239,14 +234,10 @@ export class DynamoDbOfficeRepo implements OfficeRepo {
     };
   }
 
-  private async floorFromDb(
-    dbFloor: DbFloor,
-    loadPlaces = false
-  ): Promise<Floor> {
+  private async floorFromDb(dbFloor: DbFloor): Promise<Floor> {
     return {
       id: dbFloor.id,
-      name: dbFloor.name,
-      places: loadPlaces ? await this.getFloorPlaces(dbFloor.id) : []
+      name: dbFloor.name
     };
   }
 
@@ -277,6 +268,26 @@ export class DynamoDbOfficeRepo implements OfficeRepo {
     } catch (e) {
       console.error("Failed to update floor", e);
       throw new Error("Failed to update floor");
+    }
+  }
+
+  async getPlace(placeId: string): Promise<Place> {
+    try {
+      const params = {
+        TableName: this.placesTableName,
+        ExpressionAttributeValues: {
+          ":id": placeId
+        },
+        FilterExpression: "id = :id"
+      };
+
+      const promise = await this.documentClient.scan(params).promise();
+      const dbPlaces = promise.Items as DbPlace[];
+      const first = dbPlaces[0];
+      return this.placeFromDb(first);
+    } catch (e) {
+      console.error("Failed to fetch places", e);
+      throw new Error("Failed to fetch places");
     }
   }
 }

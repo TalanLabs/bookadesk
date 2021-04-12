@@ -19,13 +19,8 @@
         </select>
       </div>
       <div class="plan-container" v-if="showPlan">
-        <img
-          class="plan"
-          @click="showPlan = !showPlan"
-          :src="'plans/' + floor.id + '.png'"
-          alt="Plan non disponible"
-        />
-        <div v-for="place in floor.places" :key="'place-text-' + place.id">
+        <img class="plan" v-bind:src="planImageUrl" alt="Plan non disponible" />
+        <div v-for="place in places" :key="'place-text-' + place.id">
           <div
             v-if="place.position"
             class="place-label"
@@ -102,7 +97,7 @@
             selected: selectedPlaceId === place.id,
             mine: currentUser.email === getBookedEmail(place.id)
           }"
-          v-for="place in floor.places"
+          v-for="place in places"
           :key="place.id"
           @click="selectPlace(place.id)"
         >
@@ -141,15 +136,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
-import { getOffice } from "@/services";
+import { getFloorPlan, getOffice } from "@/services";
 import CancelBooking from "@/components/CancelBooking.vue";
 import {
   Booking,
   DayAlreadyBookedError,
   Floor,
   Office,
+  Place,
   PlaceAlreadyBookedError
 } from "@/types";
 import ShowPlanButton from "@/components/ShowPlanButton.vue";
@@ -174,13 +170,21 @@ export default Vue.extend({
         this.selectedFloorId = localStorage.selectedFloorId;
       }
     }
+    await this.fetchPlaces({
+      officeId: this.office.id,
+      floorId: this.selectedFloorId
+    });
+
+    const planImage = await getFloorPlan(this.selectedFloorId, this.office.id);
+    this.planImageUrl = "data:image/png;base64," + planImage;
   },
   data() {
     return {
       office: {} as Office,
       selectedPlaceId: "",
       showPlan: true,
-      selectedFloorId: ""
+      selectedFloorId: "",
+      planImageUrl: ""
     };
   },
   computed: {
@@ -192,9 +196,13 @@ export default Vue.extend({
         );
       }
       return undefined;
+    },
+    places(): Place[] {
+      return this.$store.getters.floorPlaces(this.selectedFloorId);
     }
   },
   methods: {
+    ...mapActions(["fetchPlaces"]),
     async book() {
       if (this.isBooked(this.selectedPlaceId)) {
         return;
@@ -241,7 +249,9 @@ export default Vue.extend({
       return !!this.getBooking(placeId);
     },
     onSelectFloor(e: ChangeEvent<string>): void {
-      localStorage.selectedFloorId = e.target.value;
+      const selectedFloorId = e.target.value;
+      this.fetchPlaces({ officeId: this.office.id, floorId: selectedFloorId });
+      localStorage.selectedFloorId = selectedFloorId;
     }
   }
 });

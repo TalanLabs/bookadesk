@@ -59,7 +59,7 @@
           @dragover.prevent
           @dragenter.prevent
         />
-        <div v-for="place in floor.places" :key="'place-text-' + place.id">
+        <div v-for="place in places" :key="'place-text-' + place.id">
           <div
             :id="'place-label-' + place.id"
             v-if="place.position"
@@ -113,7 +113,7 @@
         </div>
         <div class="places-list">
           <div
-            v-for="place in floor.places"
+            v-for="place in places"
             :key="place.id + place.position"
             class="place-details"
             :class="{ selected: selectedPlace === place }"
@@ -188,11 +188,16 @@ export default {
     this.selectedOfficeId = this.$route.params.officeId;
     await this.loadOffice(this.selectedOfficeId);
     this.selectedFloorId = this.$route.params.floorId;
+    await this.fetchPlaces({
+      officeId: this.selectedOfficeId,
+      floorId: this.selectedFloorId
+    });
     this.planImage = await getFloorPlan(
       this.selectedFloorId,
       this.selectedOfficeId
     );
     this.planImageUrl = "data:image/png;base64," + this.planImage;
+    this.places = this.$store.getters.floorPlaces(this.selectedFloorId);
   },
   data() {
     return {
@@ -206,7 +211,8 @@ export default {
       planImage: "",
       planImageUrl: null,
       editFloorName: false,
-      editedFloorName: ""
+      editedFloorName: "",
+      places: []
     };
   },
   computed: {
@@ -218,7 +224,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchOffices"]),
+    ...mapActions(["fetchOffices", "fetchPlaces"]),
     async loadOffice() {
       const selectedOfficeId = this.selectedOfficeId;
       if (!selectedOfficeId) {
@@ -234,7 +240,7 @@ export default {
         id: this.floor.id + "_" + this.placeName,
         position: { left: 50, top: 50 }
       };
-      this.floor.places.push(newPlace);
+      this.places.push(newPlace);
       this.key = this.key + 1;
       this.selectedPlace = newPlace;
       this.placeName = "";
@@ -253,7 +259,11 @@ export default {
           this.editedFloorName
         );
       }
-      const result = await saveFloorPlaces(this.office.id, this.floor);
+      const result = await saveFloorPlaces(
+        this.office.id,
+        this.selectedFloorId,
+        this.places
+      );
       if (result instanceof Error) {
         console.error(result);
         this.$toasted.error("Erreur lors de la sauvegarde");
