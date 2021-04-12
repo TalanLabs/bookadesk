@@ -13,3 +13,8 @@ export class NotAuthorizedError extends Error {
     super(message || "User is not allowed to do this action");
   }
 }
+export class NotFoundError extends Error {
+  constructor(message?: string) {
+    super(message || "The requested object was not found");
+  }
+}

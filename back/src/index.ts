@@ -14,6 +14,8 @@ import config from "./config";
 import { createRoutes } from "./router";
 import { DynamoDbSuppliesRepo } from "./adapters/DynamoDbSuppliesRepo";
 import { S3ImageRepo } from "./adapters/S3ImageRepo";
+import { NodemailerEmailGateway } from "./adapters/NodemailerEmailGateway";
+
 import { PostgresOfficeRepo } from "./adapters/PostgresOfficeRepo";
 import { Client } from "pg";
 import { DynamoDbOfficeRepo } from "./adapters/DynamoDbOfficeRepo";
@@ -108,13 +110,17 @@ async function startApp() {
   }
   console.info("Repositories initialized");
 
+  // Init gateway
+  const emailGateway = new NodemailerEmailGateway();
+
   // Routes
   const router = createRoutes(
     keycloak,
     bookingRepo,
     officeRepo,
     suppliesRepo,
-    imageRepo
+    imageRepo,
+    emailGateway
   );
   app.use(router);
 }
