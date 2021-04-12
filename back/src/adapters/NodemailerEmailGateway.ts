@@ -1,23 +1,31 @@
 import { EmailGateway } from "../usecase/ports/EmailGateway";
 import nodemailer from "nodemailer";
 
-export class AwsEmailGateway implements EmailGateway {
+export class NodemailerEmailGateway implements EmailGateway {
   async sendEmail(
     sender: string,
     recipients: string,
     subject: string,
     body: string
   ): Promise<void> {
+    if (!process.env.SMTP_HOST) {
+      return;
+    }
     // create transporter to send email to AWS SES instance
-    const transporter = nodemailer.createTransport({
-      host: process.env.SES_HOST,
-      port: process.env.SES_PORT,
-      secure: true,
-      auth: {
-        user: process.env.SES_SMTP_USER,
-        pass: process.env.SES_SMTP_PASS
-      }
-    });
+    const options = {
+      host: process.env.SMTP_HOST,
+      port: Number.parseInt(process.env.SMTP_PORT),
+      secure: getBoolean(process.env.SMTP_SECURE),
+      ignoreTLS: getBoolean(process.env.SMTP_IGNORE_TLS),
+      auth: null
+    };
+    if (process.env.SMTP_USER) {
+      options.auth = {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
+      };
+    }
+    const transporter = nodemailer.createTransport(options);
 
     // prepare mail info and content
     const mailOptions = {
@@ -39,4 +47,8 @@ export class AwsEmailGateway implements EmailGateway {
       throw err;
     }
   }
+}
+
+function getBoolean(s: string): boolean {
+  return s == "true";
 }

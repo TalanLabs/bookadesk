@@ -28,6 +28,10 @@ export function nextBookingController(
     try {
       const user = req.kauth.grant.access_token.content;
       const next = await getNextBooking(user.email, bookingRepo, officeRepo);
+      if (!next) {
+        res.status(200).send();
+        return;
+      }
       const floorName = next.office.floors.find(
         f => f.id === next.place.floorId
       ).name;

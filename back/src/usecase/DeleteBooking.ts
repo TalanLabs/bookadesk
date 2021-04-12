@@ -1,7 +1,8 @@
 import { BookingRepo } from "./ports/BookingRepo";
-import { NotAuthorizedError } from "../domain/errors";
+import { NotAuthorizedError, NotFoundError } from "../domain/errors";
 import { EmailGateway } from "./ports/EmailGateway";
-import { parse, format } from "date-fns";
+import { format, parse } from "date-fns";
+import { Booking } from "../domain/domain";
 
 export const deleteBooking = async (
   bookingId: string,
@@ -12,25 +13,27 @@ export const deleteBooking = async (
 ): Promise<void> => {
   const booking = await bookingRepo.getBooking(bookingId);
   if (!booking) {
-    return Promise.resolve();
+    throw new NotFoundError();
   }
-  if (booking.email != userEmail) {
-    if (!isUserAdmin) {
-      throw new NotAuthorizedError();
-    }
-    else {
-       // if booking is deleted by another user who is admin, send an email to the booking's user
-      const messageDate = format(parse(booking.date, 'yyyymmdd', new Date()), 'dd-mm-yyyy')
-      emailGateway.sendEmail(
-        userEmail,
-        booking.email,
-        `Your booking for the ${messageDate} canceled by admin`,
-        `Hello,\n 
-      Your booking planned for the ${messageDate} of the place ${booking.officeId} - ${booking.placeId} has been canceled by an administrator.\n 
-      Contact your system admin for more information.\n 
-      Regards, BookADesk`
-      )
-    }
+  if (!isUserAdmin) {
+    throw new NotAuthorizedError();
+  }
+  if (booking.email !== userEmail) {
+    sendNotificationEmail(booking, emailGateway);
   }
   return bookingRepo.deleteBooking(bookingId);
 };
+
+function sendNotificationEmail(booking: Booking, emailGateway: EmailGateway) {
+  // If booking is deleted by another user who is admin, send an email to the booking's user
+  const messageDate = format(
+    parse(booking.date, "yyyymmdd", new Date()),
+    "dd/mm/yyyy"
+  );
+  emailGateway.sendEmail(
+    "bookadesk@talan.com",
+    booking.email,
+    `Your booking for ${messageDate} was canceled by admin`,
+    `Hello,\n\nYour booking planned for ${messageDate} has been canceled by an administrator.\nContact your system administrator for more information.\n\nRegards,\nBookADesk`
+  );
+}
