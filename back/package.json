@@ -8,7 +8,7 @@
     "start": "ts-node src/index.ts",
     "quickstart": "ts-node src/index.ts",
     "nodemon": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
-    "test": "echo 'no test'",
+    "test": "jest",
     "build": "./node_modules/.bin/tsc",
     "check-architecture": "./node_modules/.bin/dependency-cruiser --config .dependency-cruiser.js src",
     "lint": "eslint src/** --fix"

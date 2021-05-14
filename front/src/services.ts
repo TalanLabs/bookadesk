@@ -3,11 +3,11 @@ import config from "@/config";
 import {
   BookingDetails,
   DayAlreadyBookedError,
+  MissingSupply,
   Office,
   Place,
   PlaceAlreadyBookedError
 } from "@/types";
-import { MissingSupply } from "../../back/src/domain/domain";
 
 const apiUrl = config.apiUrl;
 

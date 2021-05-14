@@ -41,6 +41,14 @@ export interface DayStats {
   places: number;
 }
 
+export interface MissingSupply {
+  id?: string;
+  comments: string;
+  officeId: string;
+  type: string;
+  createdAt?: number;
+}
+
 export class PlaceAlreadyBookedError extends Error {}
 
 export class DayAlreadyBookedError extends Error {}
