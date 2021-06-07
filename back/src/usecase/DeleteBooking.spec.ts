@@ -11,47 +11,51 @@ import { EmailGateway } from "./ports/EmailGateway";
 
 describe("DeleteBooking", () => {
   // Init data for the tests
-  const mockBookingRepo: BookingRepo = new InMemoryBookingRepo();
-  const mockSendEmail = jest.fn().mockName("sendEmail");
-  const mockEmailGateway: EmailGateway = {
-    sendEmail: mockSendEmail
-  };
-  const booking: Booking = {
-    id: "123",
-    date: "20210128",
-    email: "normal-user@mail.com",
-    placeId: "place_1",
-    officeId: "office_1",
-    confirmed: true
-  };
+  async function initTest() {
+    const bookingRepo: BookingRepo = new InMemoryBookingRepo();
+    const sendEmail = jest.fn().mockName("sendEmail");
+    const mockEmailGateway: EmailGateway = {
+      sendEmail: sendEmail
+    };
+    const booking: Booking = {
+      id: "123",
+      date: "20210128",
+      email: "normal-user@mail.com",
+      placeId: "place_1",
+      officeId: "office_1",
+      confirmed: true
+    };
+    await bookingRepo.bookPlace(booking);
+    return { bookingRepo, mockEmailGateway, booking };
+  }
+
   test("should not send an email if user deletes its own booking", async () => {
     // GIVEN
-    const isAdmin = true;
-    const userEmail = booking.email;
+    const { bookingRepo, mockEmailGateway, booking } = await initTest();
 
     // WHEN
     await deleteBooking(
       booking.id,
-      userEmail,
-      isAdmin,
-      mockBookingRepo,
+      booking.email,
+      true,
+      bookingRepo,
       mockEmailGateway
     );
 
     // THEN
     expect(mockEmailGateway.sendEmail).toBeCalledTimes(0);
   });
+
   test("should send an email to booking's user when admin deletes its booking", async () => {
     // GIVEN
-    const isAdmin = true;
-    const userEmail = "admin-user@mail.com";
+    const { bookingRepo, mockEmailGateway, booking } = await initTest();
 
     // WHEN
     await deleteBooking(
       booking.id,
-      userEmail,
-      isAdmin,
-      mockBookingRepo,
+      "admin-user@mail.com",
+      true,
+      bookingRepo,
       mockEmailGateway
     );
 
@@ -61,16 +65,15 @@ describe("DeleteBooking", () => {
 
   test("should throw error if deleting user is nor admin nor booking's user", async () => {
     // GIVEN
-    const isAdmin = false;
-    const userEmail = "not-admin-user@mail.com";
+    const { bookingRepo, mockEmailGateway, booking } = await initTest();
 
     // WHEN
     await expect(
       deleteBooking(
         booking.id,
-        userEmail,
-        isAdmin,
-        mockBookingRepo,
+        "not-admin-user@mail.com",
+        false,
+        bookingRepo,
         mockEmailGateway
       )
     )

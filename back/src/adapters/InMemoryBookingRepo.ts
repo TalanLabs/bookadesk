@@ -2,33 +2,38 @@ import { BookingRepo } from "../usecase/ports/BookingRepo";
 import { Booking } from "../domain/domain";
 
 export class InMemoryBookingRepo implements BookingRepo {
-  booking: Booking = {
-    id: "123",
-    date: "20210128",
-    email: "normal-user@mail.com",
-    placeId: "place_1",
-    officeId: "office_1",
-    confirmed: true
-  };
+  bookings: Booking[] = [];
 
-  bookPlace(): Promise<void> {
+  bookPlace(booking: Booking): Promise<void> {
+    this.bookings.push(booking);
     return Promise.resolve();
   }
-  deleteBooking(): Promise<void> {
+
+  deleteBooking(bookingId: string): Promise<void> {
+    this.bookings = this.bookings.filter(b => b.id !== bookingId);
     return Promise.resolve();
   }
-  getBooking(): Promise<Booking> {
-    return Promise.resolve(this.booking);
+
+  getBooking(bookingId: string): Promise<Booking> {
+    return Promise.resolve(this.bookings.find(b => b.id === bookingId));
   }
-  getBookings(): Promise<Booking[]> {
-    throw new Error("Method not implemented.");
+
+  getBookings(officeId: string, date: string): Promise<Booking[]> {
+    return Promise.resolve(
+      this.bookings.filter(b => b.officeId === officeId && b.date === date)
+    );
   }
-  getUserBookings(): Promise<Booking[]> {
-    throw new Error("Method not implemented.");
+
+  getUserBookings(email: string, date: string): Promise<Booking[]> {
+    return Promise.resolve(
+      this.bookings.filter(b => b.email === email && b.date === date)
+    );
   }
+
   getUserNextBooking(): Promise<Booking> {
     throw new Error("Method not implemented.");
   }
+
   confirmPresence(): Promise<void> {
     throw new Error("Method not implemented.");
   }

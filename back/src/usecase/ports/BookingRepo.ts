@@ -3,8 +3,8 @@ import { Booking } from "../../domain/domain";
 export interface BookingRepo {
   bookPlace(booking: Booking): Promise<void>;
 
-  deleteBooking(bookingId): Promise<void>;
-  getBooking(bookingId): Promise<Booking>;
+  deleteBooking(bookingId: string): Promise<void>;
+  getBooking(bookingId: string): Promise<Booking>;
   getBookings(officeId: string, date: string): Promise<Booking[]>;
 
   getUserBookings(email: string, date: string): Promise<Booking[]>;
