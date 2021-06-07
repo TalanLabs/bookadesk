@@ -1,12 +1,11 @@
-resource "aws_iam_role" "deskBookingTaskRole" {
-  name = "deskBookingTaskRole"
+resource "aws_iam_role" "ecsTaskRole" {
+  name = "ecsTaskRole"
 
-  assume_role_policy = file("${path.module}/resources/deskBookingTaskRole.json")
-  description = "Acces DynamoDB"
+  assume_role_policy = file("${path.module}/resources/ecsTaskRole.json")
 }
 
 resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name = "ecsTaskExecutionRole"
+  name = "bookadeskEcsTaskExecutionRole"
 
   assume_role_policy = file("${path.module}/resources/ecsTaskExecutionRole.json")
 }

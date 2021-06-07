@@ -1,5 +1,5 @@
 locals {
-  bucket_frontend_name = "bookadesk${local.quote_suffix}.talan.com"
+  bucket_frontend_name = "bookadesk-open${local.quote_suffix}.talan.com"
 }
 
 resource "aws_s3_bucket" "frontend_bucket" {

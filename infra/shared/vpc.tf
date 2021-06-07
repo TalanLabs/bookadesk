@@ -6,24 +6,27 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 2.64.0"
 
-  name = "ECS default - VPC"
+  name = "bookadesk-vpc"
 
   cidr = "10.0.0.0/16"
 
   azs             = [data.aws_availability_zones.available.names[0], data.aws_availability_zones.available.names[1]]
   public_subnets = ["10.0.0.0/24", "10.0.1.0/24"]
+  database_subnets = ["10.0.10.0/24", "10.0.11.0/24"]
+
+  create_database_subnet_group = false
 
   map_public_ip_on_launch = false
   enable_dns_hostnames = true
 
   tags = {
-    Description = "Created for ECS cluster default"
+    Description = "Created for ECS cluster bookadesk"
   }
 }
 
 resource "aws_security_group" "ecs_security_group" {
-  name = "desk-b-4864" // Value used for being compliant with the legacy security group
-  description = "2020-05-15T17:07:44.087Z" // Value used for being compliant with the legacy security group
+  name = "bookadesk" // Value used for being compliant with the legacy security group
+  description = "Bookadesk (open) security group" // Value used for being compliant with the legacy security group
   vpc_id = module.vpc.vpc_id
 
   dynamic "ingress"  {

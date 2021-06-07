@@ -27,7 +27,7 @@ variable "public_subnets" {
   type = list(string)
 }
 
-variable "desk_booking_task_role_arn" {
+variable "ecs_task_role_arn" {
   type = string
 }
 
@@ -40,8 +40,8 @@ variable "lb_arn" {
 }
 
 locals {
-  underscore_prefix = var.env == "prod" ? "" : "${var.env}_"
-  quote_suffix = var.env == "prod" ? "" : "-${var.env}"
+  underscore_prefix = "${var.env}_"
+  quote_suffix = "-${var.env}"
 }
 
 data "aws_region" "current" {}
