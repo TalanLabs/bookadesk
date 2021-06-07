@@ -6,7 +6,6 @@ COPY ./package*.json ./
 COPY ./tsconfig*.json ./
 RUN npm ci --quiet
 COPY ./src ./src
-COPY ./resources ./resources
 RUN npm run build
 
 FROM node:lts-alpine
@@ -15,7 +14,6 @@ WORKDIR /usr/src/app
 ARG COMMIT_SHA=""
 
 COPY --from=build /usr/src/app/dist ./dist
-COPY --from=build /usr/src/app/resources ./resources
 COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/package.json ./
 
