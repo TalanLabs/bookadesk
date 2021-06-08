@@ -189,7 +189,7 @@ export const uploadFile = async (
   officeId: string
 ): Promise<void> => {
   try {
-    axios.post(
+    await axios.post(
       `${apiUrl}/offices/${officeId}/floors/${floorId}/plan`,
       formData,
       {

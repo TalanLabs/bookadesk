@@ -26,6 +26,7 @@ import { checkDirectoryExists } from "./infra/file";
 import { PostgresBookingRepo } from "./adapters/PostgresBookingRepo";
 import { BookingRepo } from "./usecase/ports/BookingRepo";
 import { OfficeRepo } from "./usecase/ports/OfficeRepo";
+import serveStatic from "serve-static";
 
 async function startApp() {
   dotenv.config();
@@ -45,6 +46,13 @@ async function startApp() {
   const docClient = new AWS.DynamoDB.DocumentClient();
 
   const app = express();
+
+  // Serve frontend
+  if (process.env.SERVE_FRONT) {
+    const frontPath = "../front/dist";
+    app.use(serveStatic(frontPath));
+  }
+
   app.use(bodyParser.json());
   app.use(cors());
 
@@ -122,7 +130,7 @@ async function startApp() {
     imageRepo,
     emailGateway
   );
-  app.use(router);
+  app.use("/api", router);
 }
 
 startApp().then(() => console.info("Server started"));

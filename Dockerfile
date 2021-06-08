@@ -40,6 +40,6 @@ RUN rm ./package.json
 
 ENV PORT 8000
 ENV NODE_ENV production
+ENV SERVE_FRONT true
 
-#ENTRYPOINT [ "node", "dist/index.js" ]
-ENTRYPOINT ["/bin/sh", "-c" , "serve ./front/dist -l 8080 && node back/dist/index.js"]
+ENTRYPOINT [ "node", "dist/index.js" ]

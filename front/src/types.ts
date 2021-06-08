@@ -52,3 +52,11 @@ export interface MissingSupply {
 export class PlaceAlreadyBookedError extends Error {}
 
 export class DayAlreadyBookedError extends Error {}
+
+export interface MissingSupply {
+  id?: string;
+  comments: string;
+  officeId: string;
+  type: string;
+  createdAt?: number;
+}
