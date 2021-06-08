@@ -29,20 +29,43 @@ resource "aws_ecs_service" "default_service" {
   depends_on = [aws_lb_target_group.ecs-default-bookadesk]
 }
 
+
 resource "aws_ecs_task_definition" "bookadesk_task" {
   family                = local.container_name
-  container_definitions = templatefile("${path.module}/resources/task_definition.json", {
-    registry_docker_image = aws_ecr_repository.backend_repository.repository_url
-    log_group = aws_cloudwatch_log_group.ecs_log_group.name
-    task_name = local.container_name
-    region = data.aws_region.current.name
-  })
   cpu = 256
   memory = 512
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   execution_role_arn = var.ecs_task_execution_role_arn
   task_role_arn = var.ecs_task_role_arn
+  container_definitions    = <<DEFINITION
+[
+  {
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${aws_cloudwatch_log_group.ecs_log_group.name}",
+        "awslogs-region": "${data.aws_region.current.name}",
+        "awslogs-stream-prefix": "ecs"
+      }
+    },
+    "portMappings": [
+      {
+        "hostPort": 8000,
+        "protocol": "tcp",
+        "containerPort": 8000
+      }
+    ],
+    "cpu": 0,
+    "environment": ${jsonencode(var.app_environment_vars)},
+    "essential": true,
+    "mountPoints": [],
+    "volumesFrom": [],
+    "image": "${aws_ecr_repository.backend_repository.repository_url}",
+    "name": "${local.container_name}"
+  }
+]
+  DEFINITION
 }
 
 resource "aws_cloudwatch_log_group" "ecs_log_group" {

@@ -2,7 +2,10 @@ variable "env" {
   description = "Environment: (dev, staging or prod)"
   type = string
   validation {
-    condition = contains(["dev", "staging", "prod"], var.env)
+    condition = contains([
+      "dev",
+      "staging",
+      "prod"], var.env)
     error_message = "Possible values for env are: dev, staging or prod."
   }
 }
@@ -45,3 +48,7 @@ locals {
 }
 
 data "aws_region" "current" {}
+
+variable "app_environment_vars" {
+  description = "Environment variables for the container"
+}

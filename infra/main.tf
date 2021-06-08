@@ -13,6 +13,12 @@ locals {
     prod = {
       env = "prod"
       http_port = 8002
+      env_vars= [
+//        {
+//          name= "OFFICES_REPO",
+//          value="POSTGRES"
+//        }
+      ]
     }
   }
 }
@@ -30,6 +36,7 @@ module "environments" {
   for_each = local.environment
   env = each.value.env
   http_port = each.value.http_port
+  app_environment_vars = each.value.env_vars
 
   ecs_cluster_id = module.shared.ecs_custer_id
   ecs_security_group_id = module.shared.ecs_security_group_id
