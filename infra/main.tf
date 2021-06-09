@@ -22,7 +22,10 @@ locals {
           name = "BOOKINGS_REPO",
           value = "POSTGRES"
         },
-
+        {
+          name = "IMAGES_REPO",
+          value = "FILE"
+        },
         {
           name = "DB_PORT",
           value = "5432"
