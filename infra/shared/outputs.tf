@@ -26,3 +26,6 @@ output "lb_arn" {
   value = aws_lb.bookadesk_alb.arn
 }
 
+output "db_instance" {
+  value = aws_db_instance.database
+}

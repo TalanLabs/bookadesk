@@ -52,3 +52,11 @@ data "aws_region" "current" {}
 variable "app_environment_vars" {
   description = "Environment variables for the container"
 }
+
+variable "db_instance_host" {
+  type = string
+}
+
+variable "db_instance_password" {
+  type = string
+}

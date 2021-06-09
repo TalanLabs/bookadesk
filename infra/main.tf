@@ -13,11 +13,28 @@ locals {
     prod = {
       env = "prod"
       http_port = 8002
-      env_vars= [
-//        {
-//          name= "OFFICES_REPO",
-//          value="POSTGRES"
-//        }
+      env_vars = [
+        {
+          name = "OFFICES_REPO",
+          value = "POSTGRES"
+        },
+        {
+          name = "BOOKINGS_REPO",
+          value = "POSTGRES"
+        },
+
+        {
+          name = "DB_PORT",
+          value = "5432"
+        },
+        {
+          name = "DB_NAME",
+          value = "bookadesk-prod"
+        },
+        {
+          name = "DB_USERNAME",
+          value = "postgres"
+        },
       ]
     }
   }
@@ -28,7 +45,9 @@ module "shared" {
   http_ports = values(local.environment)[*].http_port
   authorized_security_groups = [
     module.shared.ecs_security_group_id]
-  developer_ip = {}
+  developer_ip = {
+    "nico.s":"83.205.163.66"
+  }
 }
 
 module "environments" {
@@ -48,4 +67,7 @@ module "environments" {
   ecs_task_execution_role_arn = module.shared.ecs_task_execution_role_arn
 
   lb_arn = module.shared.lb_arn
+
+  db_instance_host = module.shared.db_instance.address
+  db_instance_password = module.shared.db_instance.password
 }

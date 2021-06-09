@@ -3,11 +3,11 @@ locals {
 }
 
 resource "aws_ecs_service" "default_service" {
-  name            = local.container_name
-  cluster         = var.ecs_cluster_id
+  name = local.container_name
+  cluster = var.ecs_cluster_id
   task_definition = aws_ecs_task_definition.bookadesk_task.arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
+  desired_count = 1
+  launch_type = "FARGATE"
   health_check_grace_period_seconds = 0
 
   deployment_controller {
@@ -16,29 +16,42 @@ resource "aws_ecs_service" "default_service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.ecs-default-bookadesk.id
-    container_name   = local.container_name
-    container_port   = 8000
+    container_name = local.container_name
+    container_port = 8000
   }
 
   network_configuration {
-    security_groups = [var.ecs_security_group_id]
-    subnets         = var.public_subnets
-    assign_public_ip= true
+    security_groups = [
+      var.ecs_security_group_id]
+    subnets = var.public_subnets
+    assign_public_ip = true
   }
 
-  depends_on = [aws_lb_target_group.ecs-default-bookadesk]
+  depends_on = [
+    aws_lb_target_group.ecs-default-bookadesk]
 }
 
+locals {
+  env_variables = concat(var.app_environment_vars, [    {
+    name = "DB_HOST",
+    value = var.db_instance_host
+  },
+    {
+      name = "DB_PASSWORD",
+      value = var.db_instance_password
+    }])
+}
 
 resource "aws_ecs_task_definition" "bookadesk_task" {
-  family                = local.container_name
+  family = local.container_name
   cpu = 256
   memory = 512
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
+  requires_compatibilities = [
+    "FARGATE"]
+  network_mode = "awsvpc"
   execution_role_arn = var.ecs_task_execution_role_arn
   task_role_arn = var.ecs_task_role_arn
-  container_definitions    = <<DEFINITION
+  container_definitions = <<DEFINITION
 [
   {
     "logConfiguration": {
@@ -57,7 +70,7 @@ resource "aws_ecs_task_definition" "bookadesk_task" {
       }
     ],
     "cpu": 0,
-    "environment": ${jsonencode(var.app_environment_vars)},
+    "environment": ${jsonencode(local.env_variables)},
     "essential": true,
     "mountPoints": [],
     "volumesFrom": [],

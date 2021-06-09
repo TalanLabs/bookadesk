@@ -87,3 +87,18 @@ resource "aws_security_group" "sg" {
     Env = "prod"
   }
 }
+
+provider "postgresql" {
+  scheme   = "awspostgres"
+  host     = aws_db_instance.database.address
+  username = "postgres"
+  port     = 5432
+  password = local.db_password
+  superuser = false
+}
+
+//resource "postgresql_database" "bookadesk_db" {
+//  name              = "bookadesk-prod"
+//  owner             = "postgres"
+//  allow_connections = true
+//}
