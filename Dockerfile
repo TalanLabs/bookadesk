@@ -15,8 +15,10 @@ RUN npm run build
 WORKDIR /usr/src/app/back
 
 COPY ./back/package*.json ./
-COPY ./back/tsconfig*.json ./
 RUN npm ci --quiet
+COPY ./back/tsconfig.json ./
+COPY ./back/database.json ./
+COPY ./back/migrations ./migrations
 COPY ./back/src ./src
 RUN npm run build
 
