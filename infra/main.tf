@@ -24,7 +24,7 @@ locals {
         },
         {
           name = "IMAGES_REPO",
-          value = "FILE"
+          value = "S3"
         },
         {
           name = "DB_PORT",

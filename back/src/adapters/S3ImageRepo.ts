@@ -3,7 +3,11 @@ import fs from "fs";
 import { ImageRepo } from "../usecase/ports/ImageRepo";
 
 export class S3ImageRepo implements ImageRepo {
-  constructor(private s3Suffix: string) {}
+  bucket: string;
+
+  constructor(private s3Suffix: string) {
+    this.bucket = `bookadesk-open-images${this.s3Suffix}.talan.com`;
+  }
 
   async uploadFloorPlan(floorId: string, imagePath: string): Promise<void> {
     try {
@@ -16,7 +20,7 @@ export class S3ImageRepo implements ImageRepo {
         console.error("File Error", err);
       });
       const params = {
-        Bucket: `backend-bucket${this.s3Suffix}.talan.com`,
+        Bucket: this.bucket,
         Key: `floorPlans/${floorId}.png`,
         Body: fileStream
       };
@@ -39,7 +43,7 @@ export class S3ImageRepo implements ImageRepo {
 
       const requestS3 = s3
         .getObject({
-          Bucket: `backend-bucket${this.s3Suffix}.talan.com`,
+          Bucket: this.bucket,
           Key: `floorPlans/${floorId}.png`
         })
         .promise();
