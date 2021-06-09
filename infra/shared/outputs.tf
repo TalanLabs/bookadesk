@@ -14,8 +14,8 @@ output "public_subnets" {
   value = module.vpc.public_subnets
 }
 
-output "desk_booking_task_role_arn" {
-  value = aws_iam_role.deskBookingTaskRole.arn
+output "ecs_task_role_arn" {
+  value = aws_iam_role.ecsTaskRole.arn
 }
 
 output "ecs_task_execution_role_arn" {
@@ -26,3 +26,6 @@ output "lb_arn" {
   value = aws_lb.bookadesk_alb.arn
 }
 
+output "db_instance" {
+  value = aws_db_instance.database
+}

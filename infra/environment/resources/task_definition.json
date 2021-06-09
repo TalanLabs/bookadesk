@@ -16,7 +16,7 @@
       }
     ],
     "cpu": 0,
-    "environment": [],
+    "environment": "${env_vars}",
     "essential": true,
     "mountPoints": [],
     "volumesFrom": [],

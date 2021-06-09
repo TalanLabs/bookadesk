@@ -14,5 +14,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="bookadesk-aws" uuid="b9ce8ee7-8e48-4962-b0c4-5e990a34e347">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://terraform-20210607182133410600000001.cc2rfdgtkguy.eu-west-3.rds.amazonaws.com:5432/bookadesk</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

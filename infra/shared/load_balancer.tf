@@ -1,5 +1,5 @@
 resource "aws_lb" "bookadesk_alb" {
-  name               = "alb-desk-booking"
+  name               = "alb-bookadesk"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ecs_security_group.id]

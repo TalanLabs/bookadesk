@@ -2,7 +2,10 @@ variable "env" {
   description = "Environment: (dev, staging or prod)"
   type = string
   validation {
-    condition = contains(["dev", "staging", "prod"], var.env)
+    condition = contains([
+      "dev",
+      "staging",
+      "prod"], var.env)
     error_message = "Possible values for env are: dev, staging or prod."
   }
 }
@@ -27,7 +30,7 @@ variable "public_subnets" {
   type = list(string)
 }
 
-variable "desk_booking_task_role_arn" {
+variable "ecs_task_role_arn" {
   type = string
 }
 
@@ -40,8 +43,20 @@ variable "lb_arn" {
 }
 
 locals {
-  underscore_prefix = var.env == "prod" ? "" : "${var.env}_"
-  quote_suffix = var.env == "prod" ? "" : "-${var.env}"
+  underscore_prefix = "${var.env}_"
+  quote_suffix = "-${var.env}"
 }
 
 data "aws_region" "current" {}
+
+variable "app_environment_vars" {
+  description = "Environment variables for the container"
+}
+
+variable "db_instance_host" {
+  type = string
+}
+
+variable "db_instance_password" {
+  type = string
+}

@@ -42,4 +42,4 @@ ENV PORT 8000
 ENV NODE_ENV production
 ENV SERVE_FRONT true
 
-ENTRYPOINT [ "node", "dist/index.js" ]
+ENTRYPOINT [ "npm", "start" ]
