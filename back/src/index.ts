@@ -4,6 +4,7 @@ import cors from "cors";
 import express from "express";
 import Keycloak from "keycloak-connect";
 import morgan from "morgan";
+import DBMigrate from "db-migrate";
 
 // AWS should be imported after setting up the environment variables.
 import AWS from "aws-sdk";
@@ -37,6 +38,9 @@ async function startApp() {
   } catch {
     console.error("version not found");
   }
+
+  // DB migrations
+  await migrateDb();
 
   // DynamoDB
   const awsConfig = {
@@ -142,4 +146,17 @@ function cleanTerminate(signal: NodeJS.Signals): void {
 
 function needPostgres(): boolean {
   return process.env.OFFICES_REPO === "POSTGRES";
+}
+
+function migrateDb(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      const dbmigrate = DBMigrate.getInstance(true);
+      dbmigrate.up().then(() => {
+        resolve();
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
 }
