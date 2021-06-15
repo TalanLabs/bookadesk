@@ -33,10 +33,14 @@ async function startApp() {
   dotenv.config();
 
   let version = "?";
-  try {
-    version = fs.readFileSync("version", "utf8");
-  } catch {
-    console.error("version not found");
+  if (process.env.VERSION) {
+    version = process.env.VERSION;
+  } else {
+    try {
+      version = fs.readFileSync("version", "utf8");
+    } catch {
+      console.error("version not found");
+    }
   }
 
   // DB migrations
@@ -60,7 +64,7 @@ async function startApp() {
   app.use(bodyParser.json());
   app.use(cors());
 
-  app.get("/health", (req, res: express.Response) => {
+  app.get("/api/health", (req, res: express.Response) => {
     res.status(200).send({ status: "UP", version: version });
   });
 

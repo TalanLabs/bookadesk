@@ -367,7 +367,6 @@ export function createRoutes(
   emailGateway: EmailGateway
 ): Router {
   const router = express.Router();
-  router.get("/health", (req, res) => res.status(200).send("Up"));
   router.get(
     "/bookings/next",
     keycloak.protect(),
