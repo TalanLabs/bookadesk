@@ -5,6 +5,7 @@
         class="select-css"
         @change="onChangeSelectedOffice"
         :value="selectedOfficeId"
+        v-model="selectedOfficeId"
       >
         <option
           v-for="option in getOfficeOptions"
@@ -31,6 +32,7 @@ export default {
   computed: {
     ...mapGetters(["offices"]),
     selectedOfficeId() {
+      console.log("get officeId", this.$store.getters.selectedOffice);
       return this.$store.getters.selectedOffice;
     },
     getOfficeOptions() {

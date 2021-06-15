@@ -20,6 +20,10 @@ Vue.use(Toasted, {
 
 // Load saved state
 if (localStorage.selectedOfficeId) {
+  console.log(
+    "got selected office from local storage",
+    localStorage.selectedOfficeId
+  );
   store.commit("setSelectedOffice", localStorage.selectedOfficeId);
 }
 

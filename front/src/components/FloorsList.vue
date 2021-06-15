@@ -3,7 +3,6 @@
     <div class="floor">
       <div class="floor-selection row">
         <ShowPlanButton @clicked="showPlan = !showPlan"></ShowPlanButton>
-        <!--        <div class="floor-name">Etage: {{ floor.name }}</div>-->
         <select
           v-model="selectedFloorId"
           class="select-css floor-select"
@@ -175,8 +174,7 @@ export default Vue.extend({
       floorId: this.selectedFloorId
     });
 
-    const planImage = await getFloorPlan(this.selectedFloorId, this.office.id);
-    this.planImageUrl = "data:image/png;base64," + planImage;
+    await this.fetchPlan();
   },
   data() {
     return {
@@ -226,6 +224,13 @@ export default Vue.extend({
       }
       this.selectedPlaceId = "";
     },
+    async fetchPlan() {
+      const planImage = await getFloorPlan(
+        this.selectedFloorId,
+        this.office.id
+      );
+      this.planImageUrl = "data:image/png;base64," + planImage;
+    },
     async selectPlace(placeId: string) {
       if (this.isBooked(placeId)) {
         return;
@@ -250,6 +255,7 @@ export default Vue.extend({
     },
     onSelectFloor(e: ChangeEvent<string>): void {
       const selectedFloorId = e.target.value;
+      this.fetchPlan();
       this.fetchPlaces({ officeId: this.office.id, floorId: selectedFloorId });
       localStorage.selectedFloorId = selectedFloorId;
     }
