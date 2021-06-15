@@ -5,7 +5,7 @@ export class FileImageRepo implements ImageRepo {
   constructor(private folderPath: string) {}
 
   getFloorPlan(floorId: string): Promise<string> {
-    const res = fs.readFileSync(`${this.folderPath}/${floorId}`, {
+    const res = fs.readFileSync(`${this.folderPath}/${floorId}.png`, {
       encoding: "base64"
     });
     return Promise.resolve(res);
