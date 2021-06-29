@@ -16,19 +16,25 @@ export const getStats = async (
   bookingRepo: BookingRepo,
   officeRepo: OfficeRepo
 ): Promise<DayStats> => {
-  const office: Office = await officeRepo.getOffice(officeId);
-  const places = await Promise.all(
-    office.floors.map(f => officeRepo.getFloorPlaces(f.id))
-  );
-  const bookings = await bookingRepo.getBookings(officeId, date);
+  try {
+    const office: Office = await officeRepo.getOffice(officeId);
+    const officePlaces = await Promise.all(
+      office.floors.map(f => officeRepo.getFloorPlaces(f.id))
+    );
+    const places = [].concat(...officePlaces);
+    const bookings = await bookingRepo.getBookings(officeId, date);
 
-  const placesNumber = places.length;
-  const confirmedBookingsNumber = bookings.filter(b => b.confirmed).length;
-  return {
-    date,
-    officeId,
-    places: placesNumber,
-    bookings: bookings.length,
-    confirmedBookings: confirmedBookingsNumber
-  };
+    const placesNumber = places.length;
+    const confirmedBookingsNumber = bookings.filter(b => b.confirmed).length;
+    return {
+      date,
+      officeId,
+      places: placesNumber,
+      bookings: bookings.length,
+      confirmedBookings: confirmedBookingsNumber
+    };
+  } catch (err) {
+    console.error("Failed to get statistics. ", err);
+    throw err;
+  }
 };

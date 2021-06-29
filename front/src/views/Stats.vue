@@ -11,6 +11,10 @@
     ></datepicker>
     <div v-if="stats" class="stats__day">
       <div class="stats__row">
+        <div>Places</div>
+        <div>{{ stats.places }}</div>
+      </div>
+      <div class="stats__row">
         <div>Réservations</div>
         <div>{{ stats.bookings }}</div>
       </div>
