@@ -1,4 +1,4 @@
-import { Client } from "pg";
+import { Client, QueryResult } from "pg";
 
 import { OfficeRepo } from "../usecase/ports/OfficeRepo";
 import { Floor, Office, Place } from "../domain/domain";
@@ -52,17 +52,17 @@ export class PostgresOfficeRepo implements OfficeRepo {
 
     const text = "SELECT * FROM offices WHERE offices.id= $1 ";
     const values = [officeId];
-    let office;
+    let res: QueryResult<DbOffice>;
     try {
-      const res = await this.pgClient.query(text, values);
-      if (res.rows.length == 0) {
-        throw new Error(`Office not found ${officeId}`);
-      }
-      office = PostgresOfficeRepo.officeFromDb(res.rows[0]);
+      res = await this.pgClient.query(text, values);
     } catch (err) {
       console.error("failed to get office information", err.stack);
-      return err;
+      throw err;
     }
+    if (res.rows.length == 0) {
+      throw new Error(`Office not found ${officeId}`);
+    }
+    const office = PostgresOfficeRepo.officeFromDb(res.rows[0]);
 
     const floors = await this.getFloorsByOfficeId(officeId);
     if (floors.length == 0) {
