@@ -110,6 +110,9 @@
               </button>
             </div>
           </div>
+          <button id="delete-place" @click="deletePlace(selectedPlace.id)">
+            Supprimer
+          </button>
         </div>
         <div class="places-list">
           <div
@@ -148,15 +151,6 @@
               @change="onPlanFileChange()"
             />
           </div>
-
-          <!-- <button
-            @click="upload()"
-            class="button button-primary save-button"
-            v-if="floor"
-          >
-            <label>Upload</label>
-            <img class="upload-icon" src="../assets/upload.svg" />
-          </button> -->
         </div>
       </div>
     </div>
@@ -173,6 +167,7 @@
 <script>
 import { mapActions } from "vuex";
 import {
+  deletePlace,
   getFloorPlan,
   getOffice,
   saveFloorPlaces,
@@ -180,6 +175,7 @@ import {
   uploadFile
 } from "@/services";
 import LabelEditor from "@/components/LabelEditor";
+import { uuid } from "vue-uuid";
 
 export default {
   name: "EditPlaces.vue",
@@ -237,13 +233,18 @@ export default {
     addPlace() {
       const newPlace = {
         number: this.placeName,
-        id: this.floor.id + "_" + this.placeName,
+        id: uuid.v4(),
         position: { left: 50, top: 50 }
       };
       this.places.push(newPlace);
       this.key = this.key + 1;
       this.selectedPlace = newPlace;
       this.placeName = "";
+    },
+    async deletePlace(placeId) {
+      await deletePlace(placeId);
+      this.places = this.places.filter(p => p.id !== placeId);
+      this.$toasted.info("Place supprimée");
     },
     async save() {
       if (this.file !== "") {

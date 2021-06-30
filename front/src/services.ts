@@ -141,6 +141,14 @@ export const confirmPresence = async (
   }
 };
 
+export const deletePlace = async (placeId: string): Promise<void | Error> => {
+  try {
+    await axios.delete(`${apiUrl}/places/${placeId}`);
+  } catch (e) {
+    return new Error("Unexpected error");
+  }
+};
+
 export const notifyMissingSupplies = async (
   officeId: string,
   type: string,
