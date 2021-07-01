@@ -33,6 +33,7 @@ export function getConnectedUser(userInfo: { email: string }): ConnectedUser {
   return { email: userInfo.email, isAdmin: isUserAdmin(userInfo) };
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const isUserAdmin = (userInfo): boolean => {
   return userInfo.resource_access["desk-booking-front"]?.roles?.includes(
     "admin"

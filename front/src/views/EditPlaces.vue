@@ -242,9 +242,14 @@ export default {
       this.placeName = "";
     },
     async deletePlace(placeId) {
-      await deletePlace(placeId);
-      this.places = this.places.filter(p => p.id !== placeId);
-      this.$toasted.info("Place supprimée");
+      const confirmed = confirm(
+        "Voulez-vous vraiment supprimer cette place ? Les réservations futures pour cette place seront automatiquement annulées"
+      );
+      if (confirmed) {
+        await deletePlace(placeId);
+        this.places = this.places.filter(p => p.id !== placeId);
+        this.$toasted.info("Place supprimée");
+      }
     },
     async save() {
       if (this.file !== "") {
@@ -319,6 +324,7 @@ export default {
 .office-and-floor-filters > * {
   margin: 1em 0;
 }
+
 .place-details {
   cursor: pointer;
   padding: 0.2em;
@@ -365,14 +371,6 @@ export default {
   height: 18px;
   line-height: 22px;
   font-size: 16px;
-}
-
-.plan-file-upload {
-  display: inline-block;
-  padding: 2px;
-  background-color: yellow;
-  border: 1px solid #ccc;
-  cursor: pointer;
 }
 
 .selected {

@@ -39,7 +39,7 @@ export class DynamoDbOfficeRepo implements OfficeRepo {
     this.placesTableName = dbPrefix + "Places";
   }
 
-  deletePlace(placeId: string): Promise<void> {
+  deletePlace(): Promise<void> {
     throw new Error("Method not implemented.");
   }
 
