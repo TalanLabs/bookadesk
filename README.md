@@ -40,6 +40,10 @@ To add a new migration use db-migrate to create the SQL files
 npx db-migrate create <MIGRATION_NAME> --sql-file
 ```
 
+# Credits
+
+Bin icon by <a href="https://freeicons.io/profile/3335">visuallanguage</a> on <a href="https://freeicons.io">freeicons.io</a>
+
 # Author
 
 Made by Talan Labs - https://blog.talanlabs.com/

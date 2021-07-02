@@ -173,10 +173,7 @@ export class DynamoDbBookingRepo implements BookingRepo {
     }
   }
 
-  getPlaceBookingsAfterDate(
-    placeId: string,
-    startDate: string
-  ): Promise<Booking[]> {
+  getPlaceBookingsAfterDate(): Promise<Booking[]> {
     return Promise.resolve([]);
   }
 }
