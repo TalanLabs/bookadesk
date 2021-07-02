@@ -1,5 +1,4 @@
 import * as dotenv from "dotenv";
-import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import Keycloak from "keycloak-connect";
@@ -62,7 +61,7 @@ async function startApp() {
     app.use(serveStatic(frontPath));
   }
 
-  app.use(bodyParser.json());
+  app.use(express.json());
   app.use(cors());
 
   app.get("/api/health", (req, res: express.Response) => {
