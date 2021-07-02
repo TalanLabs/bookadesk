@@ -124,7 +124,7 @@ export class PostgresBookingRepo implements BookingRepo {
     startDate: string
   ): Promise<Booking[]> {
     const text =
-      "SELECT * FROM bookings where bookings.place = $1 and bookings.date > $2";
+      "SELECT * FROM bookings where bookings.place_id = $1 and bookings.date > $2";
     const values = [placeId, startDate];
     try {
       const res = await this.client.query(text, values);
