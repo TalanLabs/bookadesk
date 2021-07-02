@@ -22,6 +22,9 @@ jobs:
       - name: Lint back
         run: npm run lint
         working-directory: ./back
+      - name: Compile back
+        run: npm run build
+        working-directory: ./back
       - name: Dependency navigator
         run: npm run check-architecture
         working-directory: ./back

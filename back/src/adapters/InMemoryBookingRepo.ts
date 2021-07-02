@@ -37,4 +37,8 @@ export class InMemoryBookingRepo implements BookingRepo {
   confirmPresence(): Promise<void> {
     throw new Error("Method not implemented.");
   }
+
+  getPlaceBookingsAfterDate(): Promise<Booking[]> {
+    throw new Error("Method not implemented.");
+  }
 }
