@@ -11,21 +11,23 @@ export const deleteBooking = async (
   bookingRepo: BookingRepo,
   emailGateway: EmailGateway
 ): Promise<void> => {
+  if (!isUserAdmin) {
+    throw new NotAuthorizedError();
+  }
   const booking = await bookingRepo.getBooking(bookingId);
   if (!booking) {
     throw new NotFoundError();
   }
-  if (!isUserAdmin) {
-    throw new NotAuthorizedError();
-  }
   if (booking.email !== userEmail) {
-    sendNotificationEmail(booking, emailGateway);
+    sendCanceledBookingEmail(booking, emailGateway);
   }
   return bookingRepo.deleteBooking(bookingId);
 };
 
-function sendNotificationEmail(booking: Booking, emailGateway: EmailGateway) {
-  // If booking is deleted by another user who is admin, send an email to the booking's user
+export function sendCanceledBookingEmail(
+  booking: Booking,
+  emailGateway: EmailGateway
+): void {
   const messageDate = format(
     parse(booking.date, "yyyymmdd", new Date()),
     "dd/mm/yyyy"

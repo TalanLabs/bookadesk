@@ -28,6 +28,7 @@ import { PostgresBookingRepo } from "./adapters/PostgresBookingRepo";
 import { BookingRepo } from "./usecase/ports/BookingRepo";
 import { OfficeRepo } from "./usecase/ports/OfficeRepo";
 import serveStatic from "serve-static";
+import { RealTimeProvider } from "./adapters/RealTimeProvider";
 
 async function startApp() {
   dotenv.config();
@@ -126,8 +127,9 @@ async function startApp() {
   }
   console.info("Repositories initialized");
 
-  // Init gateway
   const emailGateway = new NodemailerEmailGateway();
+
+  const timeProvider = new RealTimeProvider();
 
   // Routes
   const router = createRoutes(
@@ -136,7 +138,8 @@ async function startApp() {
     officeRepo,
     suppliesRepo,
     imageRepo,
-    emailGateway
+    emailGateway,
+    timeProvider
   );
   app.use("/api", router);
 }
