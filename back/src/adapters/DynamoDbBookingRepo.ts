@@ -172,4 +172,8 @@ export class DynamoDbBookingRepo implements BookingRepo {
       throw new Error("Failed to confirm booking");
     }
   }
+
+  getPlaceBookingsAfterDate(): Promise<Booking[]> {
+    return Promise.resolve([]);
+  }
 }

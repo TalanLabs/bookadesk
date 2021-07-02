@@ -27,4 +27,13 @@ export interface OfficeRepo {
   getPlace(placeId: string): Promise<Place>;
 
   getFloorPlaces(floorId: string): Promise<Place[]>;
+
+  /**
+   * Delete a place
+   *
+   * Should do nothing if place does not exists, or has already been removed.
+   * This should be a soft delete, so that we can delete a place even when it has been booked.
+   * We want to be able to remove a place and still see when it was occupied, and by whom.
+   */
+  deletePlace(placeId: string): Promise<void>;
 }

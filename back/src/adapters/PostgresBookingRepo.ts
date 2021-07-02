@@ -118,4 +118,19 @@ export class PostgresBookingRepo implements BookingRepo {
       console.error("failed to confirm booking", err.stack);
     }
   }
+
+  async getPlaceBookingsAfterDate(
+    placeId: string,
+    startDate: string
+  ): Promise<Booking[]> {
+    const text =
+      "SELECT * FROM bookings where bookings.place_id = $1 and bookings.date > $2";
+    const values = [placeId, startDate];
+    try {
+      const res = await this.client.query(text, values);
+      return res.rows.map(r => this.bookingFromDb(r));
+    } catch (err) {
+      console.error("failed to get place bookings", err.stack);
+    }
+  }
 }

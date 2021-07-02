@@ -79,38 +79,12 @@
         </div>
       </div>
       <div class="col">
-        <div
-          class="place-config col"
+        <PlaceEditor
           v-if="selectedPlace.id"
-          :key="selectedPlace.id"
-        >
-          <div class="place-config__name row">
-            Place
-            <LabelEditor
-              :text="this.selectedPlace.number"
-              :key="this.selectedPlace.id"
-              @edited="updatePlaceNumber"
-            ></LabelEditor>
-          </div>
-          <div class="place-position" v-if="selectedPlace.position">
-            <div class="place-position-x row">
-              <button @click="selectedPlace.position.left -= 0.2">
-                &lt;
-              </button>
-              <div class="place-position-y col">
-                <button @click="selectedPlace.position.top -= 0.2">
-                  ^
-                </button>
-                <button @click="selectedPlace.position.top += 0.2">
-                  v
-                </button>
-              </div>
-              <button @click="selectedPlace.position.left += 0.2">
-                &gt;
-              </button>
-            </div>
-          </div>
-        </div>
+          :delete-place="placeId => deletePlace(placeId)"
+          :selected-place="selectedPlace"
+          :update-place-number="updatePlaceNumber"
+        />
         <div class="places-list">
           <div
             v-for="place in places"
@@ -148,15 +122,6 @@
               @change="onPlanFileChange()"
             />
           </div>
-
-          <!-- <button
-            @click="upload()"
-            class="button button-primary save-button"
-            v-if="floor"
-          >
-            <label>Upload</label>
-            <img class="upload-icon" src="../assets/upload.svg" />
-          </button> -->
         </div>
       </div>
     </div>
@@ -173,17 +138,19 @@
 <script>
 import { mapActions } from "vuex";
 import {
+  deletePlace,
   getFloorPlan,
   getOffice,
   saveFloorPlaces,
   updateFloorName,
   uploadFile
 } from "@/services";
-import LabelEditor from "@/components/LabelEditor";
+import { uuid } from "vue-uuid";
+import PlaceEditor from "@/views/PlaceEditor";
 
 export default {
   name: "EditPlaces.vue",
-  components: { LabelEditor },
+  components: { PlaceEditor },
   async created() {
     this.selectedOfficeId = this.$route.params.officeId;
     await this.loadOffice(this.selectedOfficeId);
@@ -237,13 +204,24 @@ export default {
     addPlace() {
       const newPlace = {
         number: this.placeName,
-        id: this.floor.id + "_" + this.placeName,
+        id: uuid.v4(),
         position: { left: 50, top: 50 }
       };
       this.places.push(newPlace);
       this.key = this.key + 1;
       this.selectedPlace = newPlace;
       this.placeName = "";
+    },
+    async deletePlace(placeId) {
+      console.log("delete PLAAAACE");
+      const confirmed = confirm(
+        "Voulez-vous vraiment supprimer cette place ? Les réservations futures pour cette place seront automatiquement annulées"
+      );
+      if (confirmed) {
+        await deletePlace(placeId);
+        this.places = this.places.filter(p => p.id !== placeId);
+        this.$toasted.info("Place supprimée");
+      }
     },
     async save() {
       if (this.file !== "") {
@@ -318,6 +296,7 @@ export default {
 .office-and-floor-filters > * {
   margin: 1em 0;
 }
+
 .place-details {
   cursor: pointer;
   padding: 0.2em;
@@ -332,21 +311,6 @@ export default {
   max-width: 2em;
   min-height: 2em;
   max-height: 2em;
-}
-
-.place-config {
-  margin: 0 0 1em 0;
-  padding: 1em;
-  border-radius: 1em;
-  background-color: var(--background-cards);
-}
-
-.place-config__name {
-  margin-bottom: 0.5em;
-}
-
-.place-position {
-  align-self: center;
 }
 
 .places-list {
@@ -366,14 +330,6 @@ export default {
   font-size: 16px;
 }
 
-.plan-file-upload {
-  display: inline-block;
-  padding: 2px;
-  background-color: yellow;
-  border: 1px solid #ccc;
-  cursor: pointer;
-}
-
 .selected {
   background-color: var(--free);
   color: var(--text-darker);
@@ -381,10 +337,6 @@ export default {
 
 .floor-detail {
   justify-content: center;
-}
-
-.place-position-y {
-  align-items: center;
 }
 
 .save-button {

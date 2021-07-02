@@ -29,9 +29,12 @@ import { nextBookingController } from "./adapters/rest/NextBookingController";
 import { getFloorPlacesController } from "./adapters/rest/GetFloorPlacesController";
 import {
   AuthenticatedRequest,
+  isUserAdmin,
   sendUnexpectedError
 } from "./adapters/rest/RestUtils";
 import { updateFloorName } from "./usecase/updateFloorName";
+import { deletePlaceController } from "./adapters/rest/DeletePlaceController";
+import { TimeProvider } from "./usecase/ports/TimeProvider";
 
 function updatePlacesController(officeRepo: OfficeRepo) {
   return async (req: AuthenticatedRequest, res) => {
@@ -364,7 +367,8 @@ export function createRoutes(
   officeRepo: OfficeRepo,
   suppliesRepo: SuppliesRepo,
   imageRepo: ImageRepo,
-  emailGateway: EmailGateway
+  emailGateway: EmailGateway,
+  timeProvider: TimeProvider
 ): Router {
   const router = express.Router();
   router.get(
@@ -391,10 +395,14 @@ export function createRoutes(
     keycloak.protect(),
     updatePlacesController(officeRepo)
   );
+  router.delete(
+    "/places/:id",
+    deletePlaceController(officeRepo, bookingRepo, emailGateway, timeProvider)
+  );
   router.get("/offices/:id/bookings", getBookingsController(bookingRepo));
   router.post(
     "/offices/:id/book",
-    // keycloak.protect(),
+    keycloak.protect(),
     bookPlaceController(bookingRepo)
   );
   router.get(
@@ -429,9 +437,3 @@ export function createRoutes(
   );
   return router;
 }
-
-const isUserAdmin = (userInfo): boolean => {
-  return userInfo.resource_access["desk-booking-front"]?.roles?.includes(
-    "admin"
-  );
-};

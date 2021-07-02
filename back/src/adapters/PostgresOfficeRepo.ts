@@ -93,7 +93,6 @@ export class PostgresOfficeRepo implements OfficeRepo {
     await Promise.all(
       places.map(async p => {
         const exists = await this.placeExists(p.id);
-        console.log("place", p.id, "exists", exists);
         if (exists) {
           return this.updatePlace(p, floorId, officeId);
         } else {
@@ -210,7 +209,8 @@ export class PostgresOfficeRepo implements OfficeRepo {
   }
 
   async getFloorPlaces(floorId: string): Promise<Place[]> {
-    const text = "SELECT *  FROM places WHERE floor_id = $1 ORDER BY num";
+    const text =
+      "SELECT * FROM places WHERE floor_id = $1 AND deleted_at is null ORDER BY num";
     const values = [floorId];
     try {
       const res = await this.pgClient.query(text, values);
@@ -307,5 +307,15 @@ export class PostgresOfficeRepo implements OfficeRepo {
       id: dbFloor.id,
       name: dbFloor.name
     };
+  }
+
+  async deletePlace(placeId: string): Promise<void> {
+    const text = "UPDATE places SET deleted_at = CURRENT_TIMESTAMP WHERE id=$1";
+    const values = [placeId];
+    try {
+      await this.pgClient.query(text, values);
+    } catch (err) {
+      console.error("failed to delete place", err.stack);
+    }
   }
 }

@@ -32,23 +32,17 @@ npm run serve
 
 `git config core.hooksPath .githooks`
 
-# Infra (with terraform)
+# Database migrations
 
-Duplicate the file aws_credentials.sample and rename it aws_credentials.
-In the new file, enter your AWS credentials.
+To add a new migration use db-migrate to create the SQL files
 
-To recreate the environment, type:
 ```bash
-cd infra
-# Get the execution plan
-terraform plan
-# run
-terraform apply
+npx db-migrate create <MIGRATION_NAME> --sql-file
 ```
 
-Beware!!! The DynamoDB tables are managed by Terraform. Before applying, ensure they won't be replaced or destroyed.
+# Credits
 
-To create a new environment, add a new item in the local.environment variable in the file main.tf
+Bin icon by <a href="https://freeicons.io/profile/3335">visuallanguage</a> on <a href="https://freeicons.io">freeicons.io</a>
 
 # Author
 

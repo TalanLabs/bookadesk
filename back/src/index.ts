@@ -1,5 +1,4 @@
 import * as dotenv from "dotenv";
-import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import Keycloak from "keycloak-connect";
@@ -28,6 +27,7 @@ import { PostgresBookingRepo } from "./adapters/PostgresBookingRepo";
 import { BookingRepo } from "./usecase/ports/BookingRepo";
 import { OfficeRepo } from "./usecase/ports/OfficeRepo";
 import serveStatic from "serve-static";
+import { RealTimeProvider } from "./adapters/RealTimeProvider";
 
 async function startApp() {
   dotenv.config();
@@ -61,7 +61,7 @@ async function startApp() {
     app.use(serveStatic(frontPath));
   }
 
-  app.use(bodyParser.json());
+  app.use(express.json());
   app.use(cors());
 
   app.get("/api/health", (req, res: express.Response) => {
@@ -126,8 +126,9 @@ async function startApp() {
   }
   console.info("Repositories initialized");
 
-  // Init gateway
   const emailGateway = new NodemailerEmailGateway();
+
+  const timeProvider = new RealTimeProvider();
 
   // Routes
   const router = createRoutes(
@@ -136,7 +137,8 @@ async function startApp() {
     officeRepo,
     suppliesRepo,
     imageRepo,
-    emailGateway
+    emailGateway,
+    timeProvider
   );
   app.use("/api", router);
 }

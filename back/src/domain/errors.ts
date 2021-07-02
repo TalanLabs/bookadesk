@@ -9,8 +9,8 @@ export class DayAlreadyBookedError extends Error {
   }
 }
 export class NotAuthorizedError extends Error {
-  constructor(message?: string) {
-    super(message || "User is not allowed to do this action");
+  constructor(user?: string) {
+    super(`User ${user} is not allowed to do this action`);
   }
 }
 export class NotFoundError extends Error {

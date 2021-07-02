@@ -65,8 +65,8 @@ export default {
 
 .icon-button {
   margin: 8px;
-  width: 2em;
-  height: 2em;
+  width: 1.5em;
+  height: 1.5em;
   padding: 4px;
   border: none;
   background-repeat: no-repeat;

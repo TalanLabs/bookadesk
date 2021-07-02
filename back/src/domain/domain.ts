@@ -55,3 +55,8 @@ export interface BookingDetails {
   office: Office;
   place: Place;
 }
+
+export interface ConnectedUser {
+  email: string;
+  isAdmin: boolean;
+}
