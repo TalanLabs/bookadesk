@@ -85,19 +85,8 @@
           :selected-place="selectedPlace"
           :update-place-number="updatePlaceNumber"
         />
-        <div class="places-list">
-          <div
-            v-for="place in places"
-            :key="place.id + place.position"
-            class="place-details"
-            :class="{ selected: selectedPlace === place }"
-          >
-            <div class="place-details-name" @click="selectedPlace = place">
-              Place {{ place.number }}
-            </div>
-          </div>
-        </div>
         <div class="add-place-form">
+          <h4>Ajouter une place</h4>
           <label>
             <input
               v-model="placeName"
@@ -106,7 +95,7 @@
             />
           </label>
           <button @click="addPlace">
-            Ajouter place
+            Ajouter
           </button>
         </div>
         <div class="upload-image-plan">
@@ -132,6 +121,19 @@
     >
       Enregistrer l'étage
     </button>
+
+    <div class="places-list">
+      <div
+        v-for="place in places"
+        :key="place.id + place.position"
+        class="place-details"
+        :class="{ selected: selectedPlace === place }"
+      >
+        <div class="place-details-name" @click="selectedPlace = place">
+          Place {{ place.number }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -317,6 +319,7 @@ export default {
   max-height: 70vh;
   overflow-y: auto;
   margin-bottom: 1em;
+  max-width: 20rem;
 }
 
 .place-label {
@@ -392,5 +395,12 @@ export default {
 
 .input-wrapper {
   margin-left: 2rem;
+}
+
+.add-place-form {
+  margin: 0 0 1em 0;
+  padding: 1em;
+  border-radius: 1em;
+  background-color: var(--background-cards);
 }
 </style>
