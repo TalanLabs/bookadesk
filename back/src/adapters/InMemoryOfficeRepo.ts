@@ -78,4 +78,8 @@ export class InMemoryOfficeRepo implements OfficeRepo {
   ): Promise<void> {
     throw Error("Not implemented!");
   }
+
+  deletePlace(placeId: string): Promise<void> {
+    throw Error("Not implemented!");
+  }
 }
