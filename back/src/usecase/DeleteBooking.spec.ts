@@ -37,12 +37,35 @@ describe("DeleteBooking", () => {
     await deleteBooking(
       booking.id,
       booking.email,
-      true,
+      false,
       bookingRepo,
       mockEmailGateway
     );
 
     // THEN
+    const deletedBooking = await bookingRepo.getBooking(booking.id);
+    expect(deletedBooking).toBeUndefined();
+    expect(mockEmailGateway.sendEmail).toBeCalledTimes(0);
+  });
+
+  test("a non admin should not be able to delete a place booked by another user", async () => {
+    // GIVEN
+    const { bookingRepo, mockEmailGateway, booking } = await initTest();
+
+    // WHEN
+    try {
+      await deleteBooking(
+        booking.id,
+        "other-user@talan.com",
+        false,
+        bookingRepo,
+        mockEmailGateway
+      );
+    } catch (e) {
+      // THEN
+      expect(e).toBeInstanceOf(NotAuthorizedError);
+    }
+
     expect(mockEmailGateway.sendEmail).toBeCalledTimes(0);
   });
 

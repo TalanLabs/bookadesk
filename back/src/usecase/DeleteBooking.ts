@@ -11,13 +11,15 @@ export const deleteBooking = async (
   bookingRepo: BookingRepo,
   emailGateway: EmailGateway
 ): Promise<void> => {
-  if (!isUserAdmin) {
-    throw new NotAuthorizedError();
-  }
   const booking = await bookingRepo.getBooking(bookingId);
   if (!booking) {
     throw new NotFoundError();
   }
+
+  if (booking.email !== userEmail && !isUserAdmin) {
+    throw new NotAuthorizedError();
+  }
+
   if (booking.email !== userEmail) {
     sendCanceledBookingEmail(booking, emailGateway);
   }
