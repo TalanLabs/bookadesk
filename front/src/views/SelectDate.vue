@@ -9,6 +9,7 @@
       :monday-first="true"
       :full-month-name="true"
       @selected="onSelect"
+      :calendar-class="'calendar-class'"
     ></Datepicker>
   </div>
 </template>
@@ -37,3 +38,8 @@ export default {
   }
 };
 </script>
+<style>
+.calendar-class .disabled {
+  background-color: transparent;
+}
+</style>
