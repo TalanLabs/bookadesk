@@ -8,24 +8,11 @@
     <div class="subtitle">
       Sélectionner une date
     </div>
-    <div class="filters">
-      <select
-        v-model="selectedDay"
-        @change="setSelectedDate"
-        class="select-css"
-      >
-        <option
-          v-for="option in dateOptions"
-          v-bind:value="option.value"
-          :key="option.value"
-          >{{ option.text }}</option
-        >
-      </select>
-    </div>
+    <SelectDate @change="setSelectedDate" />
     <div class="subtitle">
       Sélectionner une place
     </div>
-    <FloorsList :key="selectedOffice + selectedDate"></FloorsList>
+    <FloorsList :key="selectedOffice"></FloorsList>
   </div>
 </template>
 
@@ -38,18 +25,18 @@ import { mapGetters } from "vuex";
 import { Office } from "@/types";
 import SelectOffice from "@/components/SelectOffice.vue";
 import FloorsList from "@/components/FloorsList.vue";
+import SelectDate from "@/views/SelectDate.vue";
 
 export default Vue.extend({
   name: "BookingForm",
-  components: { FloorsList, SelectOffice },
+  components: { SelectDate, FloorsList, SelectOffice },
   data() {
     return {
-      office: {} as Office,
-      selectedDay: 0
+      office: {} as Office
     };
   },
   async created() {
-    this.setSelectedDate();
+    this.setSelectedDate(new Date());
   },
   computed: {
     ...mapGetters(["currentUser", "selectedDate", "selectedOffice"]),
@@ -66,6 +53,7 @@ export default Vue.extend({
           value: offsetInDays
         };
       }
+
       const options = [
         { text: "Aujourd'hui", value: 0 },
         { text: "Demain", value: 1 },
@@ -83,12 +71,9 @@ export default Vue.extend({
     }
   },
   methods: {
-    getSelectedDate() {
-      const date = add(new Date(), { days: this.selectedDay });
-      return format(date, "yyyyMMdd");
-    },
-    setSelectedDate() {
-      this.$store.commit("setSelectedDate", this.getSelectedDate());
+    setSelectedDate(newDate: Date) {
+      const dateString = format(newDate, "yyyyMMdd");
+      this.$store.commit("setSelectedDate", dateString);
       this.$store.dispatch("fetchBookings");
     }
   }
