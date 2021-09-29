@@ -14,11 +14,12 @@
   </div>
 </template>
 <script lang="ts">
+import Vue from "vue";
 import Datepicker from "vuejs-datepicker";
 import { add } from "date-fns";
 import { fr } from "vuejs-datepicker/dist/locale";
 
-export default {
+export default Vue.extend({
   name: "SelectDate",
   components: { Datepicker },
   data() {
@@ -36,7 +37,7 @@ export default {
       this.$emit("change", d);
     }
   }
-};
+});
 </script>
 <style>
 .calendar-class .disabled {
