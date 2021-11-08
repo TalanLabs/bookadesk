@@ -57,6 +57,17 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
 
+      - name: Build, tag, and push image to Amazon ECR
+        id: deploy-public-ecr
+        env:
+          ECR_REGISTRY: public.ecr.aws/t6p3t0v4
+          ECR_REPOSITORY: talan-bookadesk
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build --build-arg current_version="${{ github.event.release.tag_name }}" -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+
 #      - name: Fill in the new image ID in the Amazon ECS task definition
 #        id: task-def
 #        uses: aws-actions/amazon-ecs-render-task-definition@v1
