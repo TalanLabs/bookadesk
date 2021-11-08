@@ -40,6 +40,15 @@ To add a new migration use db-migrate to create the SQL files
 npx db-migrate create <MIGRATION_NAME> --sql-file
 ```
 
+# Configure Keycloak
+
+In a new or existing realm in Keycloak, add a *desk-booking-front* client, do not forget to set a valid redirect uri such as http://myapp/* and a "Web Origin" such as http://myapp. 
+Add an "admin" role to this client.
+
+Create a *desk-booking-back* client, with type bearer-only
+
+Copy the realm name to the environment variable KEYCLOAK_REALM and the realm public key to KEYCLOAK_REALM_PUBLIC_KEY
+
 # Credits
 
 Bin icon by <a href="https://freeicons.io/profile/3335">visuallanguage</a> on <a href="https://freeicons.io">freeicons.io</a>

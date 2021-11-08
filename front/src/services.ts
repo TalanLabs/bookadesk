@@ -238,3 +238,16 @@ export const updateFloorName = async (
     return new Error("Unexpected error");
   }
 };
+
+export interface BackendConfig {
+  keycloakRealm: string;
+}
+
+export const getBackendConfig = async (): Promise<BackendConfig | Error> => {
+  try {
+    const res = await axios.get(`${apiUrl}/config`);
+    return res.data;
+  } catch (e) {
+    return new Error("Unexpected error");
+  }
+};
