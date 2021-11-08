@@ -435,5 +435,6 @@ export function createRoutes(
     keycloak.protect(),
     updateFloorNameController(officeRepo)
   );
+
   return router;
 }

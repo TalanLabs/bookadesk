@@ -12,7 +12,7 @@ export class FileImageRepo implements ImageRepo {
   }
 
   async uploadFloorPlan(floorId: string, imagePath: string): Promise<void> {
-    const newPath = `${this.folderPath}/${floorId}`;
+    const newPath = `${this.folderPath}/${floorId}.png`;
     return this.moveFile(newPath, imagePath);
   }
 
