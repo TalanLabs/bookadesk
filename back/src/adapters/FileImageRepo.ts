@@ -18,7 +18,7 @@ export class FileImageRepo implements ImageRepo {
 
   private moveFile(destination, origin): Promise<void> {
     return new Promise(function(resolve) {
-      fs.rename(origin, destination, err => {
+      fs.copyFile(origin, destination, err => {
         if (err) {
           throw Error(err.message);
         } else {

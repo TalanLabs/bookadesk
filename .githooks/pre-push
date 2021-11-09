@@ -31,3 +31,12 @@ else
   echo "Frontend lint failed"
   exit 1
 fi
+
+echo "Compile frontend"
+npm run compile
+if test $? -eq 0; then
+  echo "Backend compilation success"
+else
+  echo "Backend compilation failed"
+  exit 1
+fi
