@@ -1,0 +1,42 @@
+
+version: '3.5'
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATA: /data/postgres
+      POSTGRES_DB: bookadesk
+    volumes:
+      - /tmp/postgres:/data/postgres
+    ports:
+      - "5555:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  bookadesk:
+    container_name: bookadesk
+    image:  public.ecr.aws/t6p3t0v4/talan-bookadesk:latest
+    env_file:
+      - bookadesk.env
+    volumes:
+      - ${PWD}/tmp:/usr/src/app/images
+    ports:
+      - "8000:8000"
+    depends_on:
+      - "postgres"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
+  bookadesk:
