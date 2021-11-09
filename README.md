@@ -2,6 +2,14 @@ Desk booking application
 
 # Deploy
 
+## Run with Docker
+
+Copy the .env.docker file to edit according to your configuration
+
+```bash
+ docker run --env-file .env.docker -p 8000:8000 -v ${PWD}/bookadesk_images:/usr/src/app/images public.ecr.aws/t6p3t0v4/talan-bookadesk:latest
+```
+
 ## Configure Keycloak
 
 In a new or existing realm in Keycloak, add a *desk-booking-front* client, do not forget to set a valid redirect uri such as http://myapp/* and a "Web Origin" such as http://myapp.
