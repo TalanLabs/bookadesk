@@ -81,8 +81,6 @@ async function startApp() {
     "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnKq0+MnftyVe4ZfzIV2bk5L80dRTn3UIjayKhZuEBd77kNIzQgMAyUg35CQtxBpXmtLfqyyW3wXyD/qtrx2pyFx4l/x2JR4XKtq9SM9mRB30JZO9CFFlmzbTZ7xQuefk/mBqGEapau0ky04AwJoc9H2Yxuom96+8kYx9dEZmaBdTyHxppC3pS5jesLUsEDtmu9i0evxajZkf42iv63d+ONpLKx3wkmNFdkLI7uYiuaxKdoZNnkLMZr3iyvGw7C5kI7ubCp41MJcHhNyqERa84Ibl+xREwKhMj1bs5SlB18URPfJVZAs0RvlJZKbO4m9nHw4WNZ6Qu+xjESZCiQSkRQIDAQAB";
   const realmName = process.env.KEYCLOAK_REALM || "Talan";
 
-  console.log("public key", realmPublicKey);
-  console.log("realm", realmName);
   const memoryStore = new session.MemoryStore();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const kcConfig: any = {

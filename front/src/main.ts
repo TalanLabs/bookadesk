@@ -30,8 +30,10 @@ if (localStorage.selectedOfficeId) {
 
 async function initializeKeycloak() {
   const backendConfig = await getBackendConfig();
-  console.log("backend config", backendConfig);
-
+  if (backendConfig instanceof Error) {
+    console.error("Could not fetch configuration", backendConfig);
+    return;
+  }
   const kcConfig: Keycloak.KeycloakConfig = {
     url: `${config.keycloakUrl}`,
     realm: backendConfig.keycloakRealm || "Talan",
