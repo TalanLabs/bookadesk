@@ -69,7 +69,6 @@ async function startApp() {
     res.status(200).send({ status: "UP", version: version });
   });
   app.get("/api/config", (req, res) => {
-    console.log("config requested");
     return res.status(200).send({ keycloakRealm: process.env.KEYCLOAK_REALM });
   });
 

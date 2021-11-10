@@ -22,6 +22,7 @@ RUN npm ci --quiet
 COPY ./back/tsconfig.json ./
 COPY ./back/database.json ./
 COPY ./back/migrations ./migrations
+COPY ./back/resources ./resources
 COPY ./back/src ./src
 RUN npm run build
 
@@ -39,6 +40,7 @@ COPY --from=build /usr/src/app/back/node_modules ./node_modules
 COPY --from=build /usr/src/app/back/package.json ./
 COPY --from=build /usr/src/app/back/database.json ./
 COPY --from=build /usr/src/app/back/migrations ./migrations
+COPY --from=build /usr/src/app/back/resources ./resources
 COPY --from=build /usr/src/app/back/dist ./dist
 
 RUN rm ./package.json
