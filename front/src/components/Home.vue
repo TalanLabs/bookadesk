@@ -28,16 +28,6 @@
     <div class="bookings">
       <BookingCard></BookingCard>
     </div>
-    <Info></Info>
-    <WideButton
-      @click="goToMissingSupplies"
-      :title="'Signaler du matériel manquant'"
-      subtitle="Gel hydroalcoolique, ..."
-    >
-      <div class="button-icon">
-        +
-      </div>
-    </WideButton>
   </div>
 </template>
 
@@ -47,12 +37,10 @@ import BookingCard from "@/components/BookingCard";
 import { format } from "date-fns";
 import { mapGetters } from "vuex";
 import WideButton from "@/views/WideButton";
-import Info from "@/components/Info";
 
 export default {
   name: "Home",
   components: {
-    Info,
     WideButton,
     BookingCard,
     NextBooking
