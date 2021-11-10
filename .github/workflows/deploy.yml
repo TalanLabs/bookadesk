@@ -37,6 +37,5 @@ jobs:
           ECR_REPOSITORY: talan-bookadesk
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          aws ecr-public get-login-password --region us-east-1
-          docker login --username AWS --password-stdin public.ecr.aws
+          aws --region us-east-1 ecr get-login-password | docker login --username AWS --password-stdin public.ecr.aws/t6p3t0v4
 
