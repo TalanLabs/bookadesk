@@ -5,7 +5,7 @@ on: [push]
 #    types: [ created ]
 
 env:
-  AWS_REGION: eu-west-3                   # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: talan-bookadesk           # set this to your Amazon ECR repository name
 defaults:
   run:
@@ -33,10 +33,9 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: public.ecr.aws/t6p3t0v4
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo ${{ steps.login-ecr.outputs.registry }}
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
           docker build --build-arg current_version="${{ github.event.release.tag_name }}" -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
