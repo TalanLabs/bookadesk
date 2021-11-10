@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve --polling",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "compile": "tsc"
+    "compile": "tsc --outDir /dev/null"
   },
   "dependencies": {
     "axios": "^0.19.2",

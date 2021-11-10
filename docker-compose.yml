@@ -11,7 +11,7 @@ services:
       PGDATA: /data/postgres
       POSTGRES_DB: bookadesk
     volumes:
-      - /tmp/postgres:/data/postgres
+      - /data/postgres:/data/postgres
     ports:
       - "5555:5432"
     networks:
