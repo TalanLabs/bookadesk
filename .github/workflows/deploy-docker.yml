@@ -1,12 +1,9 @@
-name: Deploy to Amazon ECS
+name: Deploy to Docker Hub
 
-on: [push]
-#  release:
-#    types: [ created ]
+on:
+  release:
+    types: [ created ]
 
-env:
-  AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: talan-bookadesk           # set this to your Amazon ECR repository name
 defaults:
   run:
     shell: bash
