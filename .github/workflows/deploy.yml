@@ -30,10 +30,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Build and Push to ECR public
-        id: build-and-push
-        uses: pahud/ecr-public-action@8cd826db40befb59b0cd0b60b22a7ba72d06a7f7
-        with:
-          tags: |
-            public.ecr.aws/t6p3t0v4/${{ steps.repoName.outputs.reponame }}:latest
-            public.ecr.aws/t6p3t0v4/${{ steps.repoName.outputs.reponame }}:${{ steps.sha.outputs.sha7 }}
+      - name: Build, tag, and push image to Amazon ECR
+        id: deploy-public-ecr
+        env:
+          ECR_REGISTRY: public.ecr.aws/t6p3t0v4
+          ECR_REPOSITORY: talan-bookadesk
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
