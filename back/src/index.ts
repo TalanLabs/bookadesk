@@ -69,7 +69,10 @@ async function startApp() {
     res.status(200).send({ status: "UP", version: version });
   });
   app.get("/api/config", (req, res) => {
-    return res.status(200).send({ keycloakRealm: process.env.KEYCLOAK_REALM });
+    return res.status(200).send({
+      keycloakRealm: process.env.KEYCLOAK_REALM,
+      hidePlans: process.env.HIDE_PLANS == "true" || false
+    });
   });
 
   app.use(morgan("tiny"));
