@@ -386,10 +386,22 @@ export function createRoutes(
     keycloak.protect(),
     deleteBookingController(bookingRepo, emailGateway)
   );
-  router.post("/bookings/:id/confirm", confirmBookingController(bookingRepo));
+  router.post(
+    "/bookings/:id/confirm",
+    keycloak.protect(),
+    confirmBookingController(bookingRepo)
+  );
   router.get("/offices", getOfficesController(officeRepo));
-  router.get("/offices/:id", getOfficeController(officeRepo));
-  router.put("/offices", createOrUpdateOfficesController(officeRepo));
+  router.get(
+    "/offices/:id",
+    keycloak.protect(),
+    getOfficeController(officeRepo)
+  );
+  router.put(
+    "/offices",
+    keycloak.protect(),
+    createOrUpdateOfficesController(officeRepo)
+  );
   router.put(
     "/offices/:officeId/floors/:floorId/places",
     keycloak.protect(),
@@ -397,9 +409,14 @@ export function createRoutes(
   );
   router.delete(
     "/places/:id",
+    keycloak.protect(),
     deletePlaceController(officeRepo, bookingRepo, emailGateway, timeProvider)
   );
-  router.get("/offices/:id/bookings", getBookingsController(bookingRepo));
+  router.get(
+    "/offices/:id/bookings",
+    keycloak.protect(),
+    getBookingsController(bookingRepo)
+  );
   router.post(
     "/offices/:id/book",
     keycloak.protect(),
@@ -423,6 +440,7 @@ export function createRoutes(
   );
   router.get(
     "/offices/:officeId/floors/:floorId/plan",
+    keycloak.protect(),
     fetchFloorPlan(imageRepo)
   );
   router.get(

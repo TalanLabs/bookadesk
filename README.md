@@ -19,6 +19,10 @@ Create a *desk-booking-back* client, with type bearer-only
 
 Copy the realm name to the environment variable KEYCLOAK_REALM and the realm public key to KEYCLOAK_REALM_PUBLIC_KEY
 
+# Configuration - backend environment variables
+
+- HIDE_PLANS: do not show floor plans, hides the show/hide button too 
+
 # How to build and run locally
 
 ## Backend

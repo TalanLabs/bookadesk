@@ -2,7 +2,10 @@
   <div class="floors-list" v-if="office">
     <div class="floor">
       <div class="floor-selection row">
-        <ShowPlanButton @clicked="showPlan = !showPlan"></ShowPlanButton>
+        <ShowPlanButton
+          @clicked="showPlan = !showPlan"
+          v-if="showPlanButton"
+        ></ShowPlanButton>
         <select
           v-model="selectedFloorId"
           class="select-css floor-select"
@@ -148,6 +151,7 @@ import {
   PlaceAlreadyBookedError
 } from "@/types";
 import ShowPlanButton from "@/components/ShowPlanButton.vue";
+import config from "@/config";
 
 interface ChangeEventTarget<T> extends EventTarget {
   value: T;
@@ -180,7 +184,7 @@ export default Vue.extend({
     return {
       office: {} as Office,
       selectedPlaceId: "",
-      showPlan: true,
+      showPlan: !config.hidePlans,
       selectedFloorId: "",
       planImageUrl: ""
     };
@@ -197,6 +201,9 @@ export default Vue.extend({
     },
     places(): Place[] {
       return this.$store.getters.floorPlaces(this.selectedFloorId);
+    },
+    showPlanButton(): boolean {
+      return !config.hidePlans;
     }
   },
   methods: {

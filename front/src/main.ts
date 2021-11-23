@@ -29,11 +29,13 @@ if (localStorage.selectedOfficeId) {
 }
 
 async function initializeKeycloak() {
+  // TODO: backend configuration should be loaded when starting the app, but not here
   const backendConfig = await getBackendConfig();
   if (backendConfig instanceof Error) {
     console.error("Could not fetch configuration", backendConfig);
     return;
   }
+  config.hidePlans = backendConfig.hidePlans;
   const kcConfig: Keycloak.KeycloakConfig = {
     url: `${config.keycloakUrl}`,
     realm: backendConfig.keycloakRealm || "Talan",

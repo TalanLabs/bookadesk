@@ -241,6 +241,7 @@ export const updateFloorName = async (
 
 export interface BackendConfig {
   keycloakRealm: string;
+  hidePlans: boolean;
 }
 
 export const getBackendConfig = async (): Promise<BackendConfig | Error> => {
