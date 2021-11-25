@@ -213,7 +213,6 @@ export default {
       this.placeName = "";
     },
     async deletePlace(placeId) {
-      console.log("delete PLAAAACE");
       const confirmed = confirm(
         "Voulez-vous vraiment supprimer cette place ? Les réservations futures pour cette place seront automatiquement annulées"
       );

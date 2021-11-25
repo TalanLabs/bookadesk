@@ -21,7 +21,7 @@ Vue.use(Toasted, {
 
 // Load saved state
 if (localStorage.selectedOfficeId) {
-  console.log(
+  console.debug(
     "got selected office from local storage",
     localStorage.selectedOfficeId
   );
@@ -74,7 +74,6 @@ async function initializeKeycloak() {
 
       // Set interval to refresh token
       setInterval(() => {
-        console.log("Refreshing token...");
         keycloak
           .updateToken(70)
           .then(refreshed => {
@@ -101,7 +100,7 @@ async function initializeKeycloak() {
       // Do something with response error
       if (error.response && error.response.status === 403) {
         if (error.response.data === "Access denied") {
-          console.log("Acces denied, reset auth");
+          console.info("Acces denied, reset auth");
           keycloak.updateToken(30);
           // location.reload();
         }

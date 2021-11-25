@@ -8,4 +8,8 @@ const getReadableDate = (dateString: string) => {
   });
 };
 
-export { getReadableDate };
+const getDateFromString = (dateString: string) => {
+  return parse(dateString, "yyyyMMdd", new Date());
+};
+
+export { getReadableDate, getDateFromString };

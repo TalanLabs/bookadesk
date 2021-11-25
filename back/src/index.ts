@@ -98,7 +98,7 @@ async function startApp() {
   // Server
   const port = process.env.PORT || 8000;
   app.listen(port, () => {
-    console.log(
+    console.info(
       `Talan desk booking app listening on port ${port}! Version ${version}`
     );
     process.on("SIGABRT", cleanTerminate);
@@ -157,7 +157,9 @@ async function startApp() {
 startApp().then(() => console.info("Server started"));
 
 function cleanTerminate(signal: NodeJS.Signals): void {
-  console.log("cleaning before terminating process ...", { signal: signal });
+  console.info("cleaning before terminating process ...", {
+    signal: signal
+  });
   process.exit(0);
 }
 

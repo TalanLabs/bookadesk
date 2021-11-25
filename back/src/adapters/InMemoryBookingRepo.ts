@@ -41,4 +41,8 @@ export class InMemoryBookingRepo implements BookingRepo {
   getPlaceBookingsAfterDate(): Promise<Booking[]> {
     return Promise.resolve([]);
   }
+
+  getUserNextBookings(): Promise<Booking[]> {
+    return Promise.resolve([]);
+  }
 }
