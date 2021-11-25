@@ -225,7 +225,6 @@ export class PostgresOfficeRepo implements OfficeRepo {
     floorId: string,
     officeId: string
   ): Promise<void> {
-    console.log("insert place", place);
     const text =
       "INSERT INTO places(id, num, floor_id, office_id, room, left_pos, top_pos) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *";
     const values = [

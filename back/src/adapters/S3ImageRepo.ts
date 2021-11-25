@@ -26,7 +26,7 @@ export class S3ImageRepo implements ImageRepo {
       };
       s3.upload(params, function(s3Err, data) {
         if (s3Err) throw s3Err;
-        console.log(`File uploaded successfully at ${data.Location}`);
+        console.debug(`File uploaded successfully at ${data.Location}`);
       });
     } catch (err) {
       console.error(`Error trying upload file in s3 : ${err}`);

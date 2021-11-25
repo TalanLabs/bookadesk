@@ -73,6 +73,21 @@ export class PostgresBookingRepo implements BookingRepo {
     }
   }
 
+  async getUserNextBookings(email: string): Promise<Booking[]> {
+    const today = format(new Date(), "yyyyMMdd");
+    const text =
+      "SELECT * FROM bookings where bookings.email = $1 and bookings.date >= $2";
+    const values = [email, today];
+    try {
+      const res = await this.client.query(text, values);
+      let bookings: Booking[] = res.rows.map(r => this.bookingFromDb(r));
+      bookings = bookings.sort((a, b) => parseInt(a.date) - parseInt(b.date));
+      return bookings;
+    } catch (err) {
+      console.error("failed to get user next bookings", err.stack);
+    }
+  }
+
   async getUserNextBooking(email: string): Promise<Booking | null> {
     const today = format(new Date(), "yyyyMMdd");
     const text =

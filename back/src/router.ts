@@ -35,6 +35,7 @@ import {
 import { updateFloorName } from "./usecase/updateFloorName";
 import { deletePlaceController } from "./adapters/rest/DeletePlaceController";
 import { TimeProvider } from "./usecase/ports/TimeProvider";
+import { nextBookingsController } from "./adapters/rest/NextBookingsController";
 
 function updatePlacesController(officeRepo: OfficeRepo) {
   return async (req: AuthenticatedRequest, res) => {
@@ -375,6 +376,11 @@ export function createRoutes(
     "/bookings/next",
     keycloak.protect(),
     nextBookingController(bookingRepo, officeRepo)
+  );
+  router.get(
+    "/bookings/all-next",
+    keycloak.protect(),
+    nextBookingsController(bookingRepo)
   );
   router.get(
     "/bookings/stats",

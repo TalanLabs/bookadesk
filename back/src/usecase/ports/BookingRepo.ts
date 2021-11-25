@@ -13,6 +13,8 @@ export interface BookingRepo {
 
   getUserNextBooking(email: string): Promise<Booking | null>;
 
+  getUserNextBookings(email: string): Promise<Booking[]>;
+
   confirmPresence(bookingId: string): Promise<void>;
 
   /**

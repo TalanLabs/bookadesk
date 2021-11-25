@@ -114,7 +114,7 @@ export class DynamoDbBookingRepo implements BookingRepo {
       bookings = bookings.sort((a, b) => parseInt(a.date) - parseInt(b.date));
       return bookings[0];
     } catch (e) {
-      console.log("Failed to fetch bookings", e);
+      console.error("Failed to fetch bookings", e);
       throw new Error("Failed to fetch bookings");
     }
   }
@@ -127,7 +127,7 @@ export class DynamoDbBookingRepo implements BookingRepo {
       };
       await this.documentClient.delete(params).promise();
     } catch (e) {
-      console.log("Failed to delete bookings", e);
+      console.error("Failed to delete bookings", e);
       throw new Error("Failed to delete bookings");
     }
   }
@@ -174,6 +174,10 @@ export class DynamoDbBookingRepo implements BookingRepo {
   }
 
   getPlaceBookingsAfterDate(): Promise<Booking[]> {
+    return Promise.resolve([]);
+  }
+
+  getUserNextBookings(): Promise<Booking[]> {
     return Promise.resolve([]);
   }
 }

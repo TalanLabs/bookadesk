@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "@/config";
 import {
+  Booking,
   BookingDetails,
   DayAlreadyBookedError,
   MissingSupply,
@@ -40,7 +41,6 @@ export const getOffices = async (): Promise<Office[] | undefined> => {
       return res.data;
     });
     const officesWithFloors: Office[] = await Promise.all(promises);
-    console.log("offices", officesWithFloors);
     return officesWithFloors;
   } catch (error) {
     console.error("Could not fetch offices list", error);
@@ -86,6 +86,15 @@ export const getNextBooking = async (): Promise<BookingDetails | undefined> => {
     return response.data;
   } catch (error) {
     console.error("Could not fetch next booking", error);
+  }
+};
+export const getNextBookings = async (): Promise<Booking[]> => {
+  try {
+    const response = await axios.get(`${apiUrl}/bookings/all-next`);
+    return response.data;
+  } catch (error) {
+    console.error("Could not fetch next bookings", error);
+    return [];
   }
 };
 export const getStats = async (officeId: string, date: string) => {

@@ -11,7 +11,7 @@ export const initDb = async (): Promise<Client> => {
     };
     const pgClient: Client = new Client(config);
     await pgClient.connect();
-    console.log(`Connected to Postgres database`);
+    console.info(`Connected to Postgres database`);
     return pgClient;
   } catch (e) {
     console.error("failed to connect to DB", e);
