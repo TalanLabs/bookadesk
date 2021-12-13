@@ -216,6 +216,10 @@ export default new Vuex.Store<StateModel>({
       } else {
         context.commit("confirmBooking", context.state.nextBooking.id);
       }
+    },
+    async setSelectedOffice(context, officeId) {
+      context.commit("setSelectedOffice", officeId);
+      await context.dispatch("fetchBookings");
     }
   }
 });

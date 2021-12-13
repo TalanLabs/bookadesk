@@ -4,8 +4,7 @@
       <select
         class="select-css"
         @change="onChangeSelectedOffice"
-        :value="selectedOfficeId"
-        v-model="selectedOfficeId"
+        :value="selectedOffice"
       >
         <option
           v-for="option in getOfficeOptions"
@@ -19,22 +18,18 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   name: "SelectOffice",
   async created() {
-    await this.fetchOffices();
+    await this.$store.dispatch("fetchOffices");
   },
   data() {
     return {};
   },
   computed: {
-    ...mapGetters(["offices"]),
-    selectedOfficeId() {
-      console.log("get officeId", this.$store.getters.selectedOffice);
-      return this.$store.getters.selectedOffice;
-    },
+    ...mapGetters(["offices", "selectedOffice"]),
     getOfficeOptions() {
       return this.offices.map(o => {
         return {
@@ -45,9 +40,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchOffices"]),
     onChangeSelectedOffice(e) {
-      this.$store.commit("setSelectedOffice", e.target.value);
+      this.$store.dispatch("setSelectedOffice", e.target.value);
       localStorage.selectedFloorId = "";
       this.$emit("selectedOffice", e.target.value);
     }
