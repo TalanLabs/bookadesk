@@ -27,6 +27,14 @@
         <div>{{ ((stats.bookings / stats.places) * 100).toFixed(0) }}%</div>
       </div>
     </div>
+    <div>
+      <h3>Réservations</h3>
+      <div class="stats__day">
+        <div v-for="email in stats.emails" :key="email" class="stats__row">
+          {{ email }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
