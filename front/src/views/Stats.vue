@@ -1,14 +1,21 @@
 <template>
   <div class="stats col">
-    <h1>Statistiques</h1>
+    <h1 class="text-4xl mb-2 ">
+      Statistiques
+    </h1>
     <SelectOffice @selectedOffice="loadStats"></SelectOffice>
-    <datepicker
-      class="stats__datepicker"
-      @selected="setSelectedDate"
-      :value="selectedDate"
-      :monday-first="true"
-      :language="fr"
-    ></datepicker>
+    <div class="flex items-center">
+      <label class="text-xl">Date : </label>
+      <div class="">
+        <datepicker
+          class=" my-4 p-4 "
+          @selected="setSelectedDate"
+          :value="selectedDate"
+          :monday-first="true"
+          :language="fr"
+        ></datepicker>
+      </div>
+    </div>
     <div v-if="stats" class="stats__day">
       <div class="stats__row">
         <div>Places</div>
@@ -28,7 +35,7 @@
       </div>
     </div>
     <div>
-      <h3>Réservations</h3>
+      <h3 class="text-2xl mt-4">Réservations</h3>
       <ul class="stats__day">
         <li v-for="email in stats.emails" :key="email" class="stats__row">
           {{ email }}
@@ -102,5 +109,6 @@ export default Vue.extend({
 .stats__datepicker {
   align-self: center;
   margin: 32px;
+  cursor: pointer !important;
 }
 </style>
