@@ -33,7 +33,7 @@ export default {
   border-radius: 6px;
   background-color: var(--secondary);
   color: var(--text-light);
-  padding: 0.5em 3em;
+  padding: 4px 24px;
 }
 .cancel-button:hover {
   box-shadow: none;

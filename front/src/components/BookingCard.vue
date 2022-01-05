@@ -1,5 +1,5 @@
 <template>
-  <div class="card" v-if="booking && booking.date">
+  <div class="card p-8" v-if="booking && booking.date">
     <div class="booking-title">
       {{ booking.officeName }}
     </div>

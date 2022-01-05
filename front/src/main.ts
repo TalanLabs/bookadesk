@@ -2,6 +2,7 @@ import axios from "axios";
 import Keycloak from "keycloak-js";
 import Toasted from "vue-toasted";
 import Vue from "vue";
+import "../public/index.css";
 
 import App from "./App.vue";
 import router from "./router";
