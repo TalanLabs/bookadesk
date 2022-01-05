@@ -1,5 +1,5 @@
 import { OfficeRepo } from "./ports/OfficeRepo";
-import { Office } from "../domain/domain";
+import { Booking, Office } from "../domain/domain";
 import { BookingRepo } from "./ports/BookingRepo";
 
 interface DayStats {
@@ -8,6 +8,7 @@ interface DayStats {
   bookings: number;
   confirmedBookings: number;
   places: number;
+  emails: string[];
 }
 
 export const getStats = async (
@@ -22,7 +23,7 @@ export const getStats = async (
       office.floors.map(f => officeRepo.getFloorPlaces(f.id))
     );
     const places = [].concat(...officePlaces);
-    const bookings = await bookingRepo.getBookings(officeId, date);
+    const bookings: Booking[] = await bookingRepo.getBookings(officeId, date);
 
     const placesNumber = places.length;
     const confirmedBookingsNumber = bookings.filter(b => b.confirmed).length;
@@ -31,10 +32,15 @@ export const getStats = async (
       officeId,
       places: placesNumber,
       bookings: bookings.length,
-      confirmedBookings: confirmedBookingsNumber
+      confirmedBookings: confirmedBookingsNumber,
+      emails: removeDuplicates(bookings.map(b => b.email).sort())
     };
   } catch (err) {
     console.error("Failed to get statistics. ", err);
     throw err;
   }
 };
+
+function removeDuplicates<T>(data: T[]): T[] {
+  return [...new Set(data)];
+}
