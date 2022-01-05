@@ -9,14 +9,10 @@
     "compile": "tsc --outDir ./tmp"
   },
   "dependencies": {
-    "@tailwindcss/postcss7-compat": "^2.2.17",
-    "autoprefixer": "^9",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "date-fns": "^2.13.0",
     "keycloak-js": "^10.0.1",
-    "postcss": "^7",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
     "v-tooltip": "^2.1.2",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
@@ -35,17 +31,20 @@
     "@vue/cli-service": "^4.5.15",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
-    "autoprefixer": "^10.4.1",
+    "autoprefixer": "^9.8.8",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^6.2.2",
     "lint-staged": "^9.5.0",
-    "postcss": "^8.4.5",
+    "postcss": "^7.0.39",
     "prettier": "^1.19.1",
-    "tailwindcss": "^3.0.11",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
     "typescript": "~3.8.3",
     "vue-cli-plugin-tailwind": "~2.2.18",
     "vue-template-compiler": "^2.6.11"
+  },
+  "overrides": {
+    "postcss": "^8.4.5"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
