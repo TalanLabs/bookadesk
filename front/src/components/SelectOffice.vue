@@ -1,11 +1,7 @@
 <template>
   <div>
     <label>
-      <select
-        class="select-css"
-        @change="onChangeSelectedOffice"
-        :value="selectedOffice"
-      >
+      <select class="select-css" v-model="selectedOffice">
         <option
           v-for="option in getOfficeOptions"
           v-bind:value="option.id"
@@ -29,7 +25,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["offices", "selectedOffice"]),
+    ...mapGetters(["offices"]),
     getOfficeOptions() {
       return this.offices.map(o => {
         return {
@@ -37,13 +33,16 @@ export default {
           id: o.id
         };
       });
-    }
-  },
-  methods: {
-    onChangeSelectedOffice(e) {
-      this.$store.dispatch("setSelectedOffice", e.target.value);
-      localStorage.selectedFloorId = "";
-      this.$emit("selectedOffice", e.target.value);
+    },
+    selectedOffice: {
+      get() {
+        return this.$store.getters.selectedOffice;
+      },
+      set(value) {
+        this.$store.dispatch("setSelectedOffice", value);
+        localStorage.selectedFloorId = "";
+        this.$emit("selectedOffice", value);
+      }
     }
   }
 };
