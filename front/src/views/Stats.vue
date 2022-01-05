@@ -29,11 +29,11 @@
     </div>
     <div>
       <h3>Réservations</h3>
-      <div class="stats__day">
-        <div v-for="email in stats.emails" :key="email" class="stats__row">
+      <ul class="stats__day">
+        <li v-for="email in stats.emails" :key="email" class="stats__row">
           {{ email }}
-        </div>
-      </div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -83,6 +83,7 @@ export default Vue.extend({
 
 .stats__day {
   margin-top: 16px;
+  padding-left: 0;
 }
 
 .stats__row {
