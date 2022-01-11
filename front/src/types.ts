@@ -33,12 +33,33 @@ export interface Office {
   floors: Floor[];
 }
 
-export interface DayStats {
-  date: string;
+export interface FloorStats {
+  floorId: string;
+  floorName: string;
+  bookingsNumber: number;
+  placesNumber: number;
+}
+
+export interface OfficeStats {
   officeId: string;
-  bookings: number;
-  confirmedBookings: number;
-  places: number;
+  officeName: string;
+  bookingsNumber: number;
+  placesNumber: number;
+  floors: FloorStats[];
+}
+
+export interface UserStats {
+  bookingsNumber: number;
+  email: string;
+}
+
+export interface BookingStats {
+  startDate: string;
+  endDate: string;
+  totalBookings: number;
+  totalPlaces: number;
+  offices: OfficeStats[];
+  users: UserStats[];
 }
 
 export interface MissingSupply {

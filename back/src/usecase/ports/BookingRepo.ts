@@ -9,6 +9,12 @@ export interface BookingRepo {
 
   getBookings(officeId: string, date: string): Promise<Booking[]>;
 
+  getAllBookings(
+    officeId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<Booking[]>;
+
   getUserBookings(email: string, date: string): Promise<Booking[]>;
 
   getUserNextBooking(email: string): Promise<Booking | null>;

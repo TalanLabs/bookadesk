@@ -97,10 +97,14 @@ export const getNextBookings = async (): Promise<Booking[]> => {
     return [];
   }
 };
-export const getStats = async (officeId: string, date: string) => {
+export const getStats = async (
+  offices: string[],
+  startDate: string,
+  endDate: string
+) => {
   try {
     const res = await axios.get(`${apiUrl}/bookings/stats`, {
-      params: { officeId, date }
+      params: { offices: offices, startDate: startDate, endDate: endDate }
     });
     return res.data;
   } catch (e) {
