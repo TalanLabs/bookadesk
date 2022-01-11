@@ -103,6 +103,9 @@ export const getStats = async (
     for (const [email, bookings] of userMap) {
       userStats.push({ email: email, bookingsNumber: bookings });
     }
+    const sortedUserStats = userStats.sort((a, b) =>
+      a.email.localeCompare(b.email)
+    );
 
     const { bookings, places } = officesStats.reduce<StatsCount>(
       (previousValue, currentValue) => {
@@ -119,7 +122,7 @@ export const getStats = async (
       endDate,
       totalBookings: bookings,
       totalPlaces: places,
-      users: userStats,
+      users: sortedUserStats,
       offices: officesStats
     };
   } catch (err) {
@@ -127,10 +130,6 @@ export const getStats = async (
     throw err;
   }
 };
-
-function removeDuplicates<T>(data: T[]): T[] {
-  return [...new Set(data)];
-}
 
 function groupBy(list, keyGetter) {
   const map = new Map();
