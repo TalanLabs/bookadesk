@@ -32,7 +32,8 @@ describe("GetStats", () => {
     const { bookingRepo, officeRepo } = await initTest();
     // WHEN
     const dayStats = await getStats(
-      officeId,
+      [officeId],
+      testDate,
       testDate,
       bookingRepo,
       officeRepo
@@ -40,8 +41,8 @@ describe("GetStats", () => {
 
     // THEN
     expect(dayStats).toBeDefined();
-    expect(dayStats.places).toEqual(2);
-    expect(dayStats.bookings).toEqual(1);
+    expect(dayStats.totalPlaces).toEqual(2);
+    expect(dayStats.totalBookings).toEqual(1);
   });
 
   test("should get stats for two booked places in two places office", async () => {
@@ -58,7 +59,8 @@ describe("GetStats", () => {
     await bookingRepo.bookPlace(booking);
     // WHEN
     const dayStats = await getStats(
-      officeId,
+      [officeId],
+      testDate,
       testDate,
       bookingRepo,
       officeRepo
@@ -66,7 +68,7 @@ describe("GetStats", () => {
 
     // THEN
     expect(dayStats).toBeDefined();
-    expect(dayStats.places).toEqual(2);
-    expect(dayStats.bookings).toEqual(2);
+    expect(dayStats.totalPlaces).toEqual(2);
+    expect(dayStats.totalBookings).toEqual(2);
   });
 });

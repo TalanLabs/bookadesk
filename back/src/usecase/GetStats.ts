@@ -50,7 +50,6 @@ export const getStats = async (
     const officesStats: OfficeStats[] = [];
     const userMap: Map<string, number> = new Map();
     for (const officeId of offices) {
-      console.log("office id", officeId);
       const office: Office = await officeRepo.getOffice(officeId);
       const officePlacesArray: Place[][] = await Promise.all(
         office.floors.map(f => officeRepo.getFloorPlaces(f.id))

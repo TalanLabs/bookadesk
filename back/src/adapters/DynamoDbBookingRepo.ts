@@ -181,11 +181,7 @@ export class DynamoDbBookingRepo implements BookingRepo {
     return Promise.resolve([]);
   }
 
-  getAllBookings(
-    officeId: string,
-    startDate: string,
-    endDate: string
-  ): Promise<Booking[]> {
+  getAllBookings(): Promise<Booking[]> {
     return Promise.resolve([]);
   }
 }

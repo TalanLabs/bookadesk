@@ -51,6 +51,10 @@ export class InMemoryBookingRepo implements BookingRepo {
     startDate: string,
     endDate: string
   ): Promise<Booking[]> {
-    return Promise.resolve([]);
+    return Promise.resolve(
+      this.bookings.filter(
+        b => b.officeId === officeId && b.date >= startDate && b.date <= endDate
+      )
+    );
   }
 }
