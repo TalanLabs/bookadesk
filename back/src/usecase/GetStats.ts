@@ -46,6 +46,7 @@ export const getStats = async (
   bookingRepo: BookingRepo,
   officeRepo: OfficeRepo
 ): Promise<BookingStats> => {
+  console.info("Get stats", startDate, endDate, offices);
   try {
     const officesStats: OfficeStats[] = [];
     const userMap: Map<string, number> = new Map();
