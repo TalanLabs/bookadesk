@@ -50,6 +50,22 @@ export class PostgresBookingRepo implements BookingRepo {
     }
   }
 
+  async getAllBookings(
+    officeId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<Booking[]> {
+    const text =
+      "SELECT * FROM places LEFT JOIN bookings ON places.id = bookings.place_id where places.office_id = $1 and bookings.date between $2 and $3";
+    const values = [officeId, startDate, endDate];
+    try {
+      const res = await this.client.query(text, values);
+      return res.rows.map(r => this.bookingFromDb(r));
+    } catch (err) {
+      console.error("failed to get bookings", err.stack);
+    }
+  }
+
   bookingFromDb(d: DbBooking): Booking {
     return {
       id: d.id,

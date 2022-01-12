@@ -9,3 +9,11 @@ export const toLowerSnakeCase: (_: string) => string = function(str) {
       ?.join("_") || ""
   );
 };
+
+export const getMeanRate = (
+  num: number,
+  total: number,
+  span: number
+): string => {
+  return ((Math.floor(num / span) / total) * 100).toFixed(0);
+};

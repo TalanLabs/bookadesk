@@ -236,15 +236,23 @@ function notifyMissingSuppliesController(suppliesRepo: SuppliesRepo) {
 function statsController(bookingRepo: BookingRepo, officeRepo: OfficeRepo) {
   return async (req, res) => {
     try {
-      const officeId = req.query.officeId as string;
-      const date = req.query.date as string;
-      if (!officeId || !date) {
+      const offices = req.query.offices as string[];
+      console.log("offices", offices);
+      const startDate = req.query.startDate as string;
+      const endDate = (req.query.endDate as string) || startDate;
+      if (!offices || !startDate) {
         return res.status(400).send({
           code: "MISSING_PARAMETERS",
-          message: "Missing query parameters: date or officeId"
+          message: "Missing query parameters: startDate or officeId"
         });
       }
-      const stats = await getStats(officeId, date, bookingRepo, officeRepo);
+      const stats = await getStats(
+        offices,
+        startDate,
+        endDate,
+        bookingRepo,
+        officeRepo
+      );
       return res.send(stats);
     } catch (e) {
       console.error("Failed to get stats", e);
@@ -384,7 +392,7 @@ export function createRoutes(
   );
   router.get(
     "/bookings/stats",
-    keycloak.protect(),
+    //keycloak.protect(),
     statsController(bookingRepo, officeRepo)
   );
   router.delete(
