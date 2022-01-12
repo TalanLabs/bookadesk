@@ -48,20 +48,32 @@ export const getStats = async (
 ): Promise<BookingStats> => {
   console.info("Get stats", startDate, endDate, offices);
   try {
-    const officesStats: OfficeStats[] = [];
     const userMap: Map<string, number> = new Map();
-    for (const officeId of offices) {
-      const officeStats: OfficeStats = await getOfficeStats(
-        officeId,
-        startDate,
-        endDate,
-        userMap,
-        officeRepo,
-        bookingRepo
-      );
-      officesStats.push(officeStats);
-    }
 
+    const allBookings = flatten(
+      await Promise.all(
+        offices.map(officeId =>
+          bookingRepo.getAllBookings(officeId, startDate, endDate)
+        )
+      )
+    );
+
+    const officesStats: OfficeStats[] = await Promise.all(
+      offices.map((officeId: string) =>
+        getOfficeStats(
+          officeId,
+          startDate,
+          endDate,
+          allBookings.filter(b => b.officeId === officeId),
+          officeRepo
+        )
+      )
+    );
+
+    // User booking stats
+    allBookings.forEach(b =>
+      userMap.set(b.email, (userMap.get(b.email) || 0) + 1)
+    );
     const userStats: UserStats[] = [];
     for (const [email, bookings] of userMap) {
       userStats.push({ email: email, bookingsNumber: bookings });
@@ -95,31 +107,19 @@ export const getStats = async (
   }
 };
 
-/**
- * TODO userMap should be removed from here, we should sum user reservations somewhere else
- * TODO clean this function...
- */
 async function getOfficeStats(
   officeId: string,
   startDate: string,
   endDate: string,
-  userMap: Map<string, number>,
-  officeRepo: OfficeRepo,
-  bookingRepo: BookingRepo
+  bookings: Booking[],
+  officeRepo: OfficeRepo
 ): Promise<OfficeStats> {
   const office: Office = await officeRepo.getOffice(officeId);
 
   const officePlacesArray: Place[][] = await Promise.all(
     office.floors.map(f => officeRepo.getFloorPlaces(f.id))
   );
-  const officePlaces = [].concat(...officePlacesArray);
-
-  const bookings: Booking[] = await bookingRepo.getAllBookings(
-    officeId,
-    startDate,
-    endDate
-  );
-  bookings.forEach(b => userMap.set(b.email, (userMap.get(b.email) || 0) + 1));
+  const officePlaces = flatten(officePlacesArray);
 
   const floorPlaces = groupBy(officePlaces, p => p.floorId);
   const floorStatsMap: Map<string, FloorStats> = new Map();
@@ -166,4 +166,8 @@ function groupBy(list, keyGetter) {
     }
   });
   return map;
+}
+
+function flatten(arrays) {
+  return [].concat(...arrays);
 }
