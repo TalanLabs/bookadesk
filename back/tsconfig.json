@@ -5,7 +5,9 @@
     "target": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist"
-  },
-  "lib": ["es2019"]
+    "outDir": "dist",
+    "lib": [
+      "es2019"
+    ]
+  }
 }
