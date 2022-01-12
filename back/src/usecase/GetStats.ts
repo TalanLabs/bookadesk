@@ -36,6 +36,18 @@ interface StatsCount {
   places: number;
 }
 
+function getUserStats(allBookings: FlatArray<Booking[][], 1>[]) {
+  const userMap: Map<string, number> = new Map();
+  const userStats: UserStats[] = [];
+  allBookings.forEach(b =>
+    userMap.set(b.email, (userMap.get(b.email) || 0) + 1)
+  );
+  for (const [email, bookings] of userMap) {
+    userStats.push({ email: email, bookingsNumber: bookings });
+  }
+  return userStats.sort((a, b) => a.email.localeCompare(b.email));
+}
+
 /**
  * We maybe could add floorId to the booking (denormalize) to facilitate stats computing...
  */
@@ -48,15 +60,13 @@ export const getStats = async (
 ): Promise<BookingStats> => {
   console.info("Get stats", startDate, endDate, offices);
   try {
-    const userMap: Map<string, number> = new Map();
-
-    const allBookings = flatten(
+    const allBookings = (
       await Promise.all(
         offices.map(officeId =>
           bookingRepo.getAllBookings(officeId, startDate, endDate)
         )
       )
-    );
+    ).flat();
 
     const officesStats: OfficeStats[] = await Promise.all(
       offices.map((officeId: string) =>
@@ -68,18 +78,6 @@ export const getStats = async (
           officeRepo
         )
       )
-    );
-
-    // User booking stats
-    allBookings.forEach(b =>
-      userMap.set(b.email, (userMap.get(b.email) || 0) + 1)
-    );
-    const userStats: UserStats[] = [];
-    for (const [email, bookings] of userMap) {
-      userStats.push({ email: email, bookingsNumber: bookings });
-    }
-    const sortedUserStats = userStats.sort((a, b) =>
-      a.email.localeCompare(b.email)
     );
 
     // Count total bookings and places
@@ -98,7 +96,7 @@ export const getStats = async (
       endDate,
       totalBookings: bookings,
       totalPlaces: places,
-      users: sortedUserStats,
+      users: getUserStats(allBookings),
       offices: officesStats
     };
   } catch (err) {
@@ -116,10 +114,9 @@ async function getOfficeStats(
 ): Promise<OfficeStats> {
   const office: Office = await officeRepo.getOffice(officeId);
 
-  const officePlacesArray: Place[][] = await Promise.all(
-    office.floors.map(f => officeRepo.getFloorPlaces(f.id))
-  );
-  const officePlaces = flatten(officePlacesArray);
+  const officePlaces: Place[] = (
+    await Promise.all(office.floors.map(f => officeRepo.getFloorPlaces(f.id)))
+  ).flat();
 
   const floorPlaces = groupBy(officePlaces, p => p.floorId);
   const floorStatsMap: Map<string, FloorStats> = new Map();
@@ -166,8 +163,4 @@ function groupBy(list, keyGetter) {
     }
   });
   return map;
-}
-
-function flatten(arrays) {
-  return [].concat(...arrays);
 }
