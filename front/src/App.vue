@@ -1,19 +1,29 @@
 <template>
   <div id="app">
     <div id="nav">
-      <div class="app-title" v-if="$route.name === 'Home'">bookAdesk</div>
-      <div class="back-arrow" @click="goHome" v-if="$route.name !== 'Home'">
+      <div
+        class="cursor-pointer app-title hover:underline hover:decoration-indigo-500 "
+        v-if="$route.name === 'Home'"
+      >
+        bookAdesk
+      </div>
+      <div
+        class="cursor-pointer text-indigo-600 border-2 rounded-full border-indigo-600 px-3 py-1 hover:bg-indigo-600 hover:text-white"
+        @click="goHome"
+        v-if="$route.name !== 'Home'"
+      >
         Accueil
       </div>
       <div class="row">
         <div
-          class="nav-link"
+          class="cursor-pointer text-indigo-600 border-2 rounded-full border-indigo-600 px-3 py-1 hover:bg-indigo-600 hover:text-white"
           @click="$route.name !== 'Stats' && $router.push({ name: 'Stats' })"
+          v-if="$route.name !== 'Stats'"
         >
           Stats
         </div>
         <div
-          class="nav-link"
+          class=" cursor-pointer text-indigo-600 border-2 rounded-full border-indigo-600 px-3 py-1 hover:bg-indigo-600 hover:text-white"
           v-if="$store.state.isUserAdmin"
           @click="
             $route.name !== 'EditOffice' && $router.push({ name: 'EditOffice' })
