@@ -5,7 +5,7 @@
       :key="option.id"
       @click="toggleOption(option.id)"
       :class="{
-        'text-white bg-blue-700 ': selectedOffices.includes(option.id)
+        'text-white bg-indigo-800 ': selectedOffices.includes(option.id)
       }"
       class="bg-gray-200 mx-1.5 my-1 px-3 py-1.5 rounded-full cursor-pointer hover:bg-blue-100 hover:text-gray-700"
     >
@@ -41,12 +41,14 @@ export default {
     ...mapGetters(["offices"]),
 
     getOfficeOptions() {
-      return this.offices.map(o => {
-        return {
-          name: o.name,
-          id: o.id
-        };
-      });
+      return this.offices
+        .map(o => {
+          return {
+            name: o.name,
+            id: o.id
+          };
+        })
+        .sort((a, b) => a.name.localeCompare(b.name));
     }
   }
 };

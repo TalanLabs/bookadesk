@@ -4,34 +4,30 @@
       Statistiques
     </h1>
     <div
-      class="border-2 border-dashed border-blue-600 rounded-xl p-4 flex-column"
+      class="border-2 border-dashed border-indigo-600 rounded-xl p-4 flex-column"
     >
       <MultiSelectOffice
         v-on:select-office="onSelectOffices"
       ></MultiSelectOffice>
       <div class="flex items-center mt-4">
         <label class="text-lg">Date de début : </label>
-        <div class="">
-          <datepicker
-            class="px-4 "
-            @selected="setSelectedDate"
-            :value="selectedDate"
-            :monday-first="true"
-            :language="fr"
-          ></datepicker>
-        </div>
+        <datepicker
+          class="px-4 "
+          @selected="setSelectedDate"
+          :value="selectedDate"
+          :monday-first="true"
+          :language="fr"
+        ></datepicker>
       </div>
       <div class="flex items-center">
         <label class="text-lg">Date de fin : </label>
-        <div class="">
-          <datepicker
-            class="px-4 "
-            @selected="setSelectedEndDate"
-            :value="selectedEndDate"
-            :monday-first="true"
-            :language="fr"
-          ></datepicker>
-        </div>
+        <datepicker
+          class="px-4 "
+          @selected="setSelectedEndDate"
+          :value="selectedEndDate"
+          :monday-first="true"
+          :language="fr"
+        ></datepicker>
       </div>
       <button
         @click="loadStats"
@@ -69,13 +65,13 @@ export default Vue.extend({
     return {
       stats: {} as BookingStats,
       fr: fr,
-      selectedDate: new Date(),
-      selectedEndDate: new Date(),
-      selectedOffices: []
+      selectedDate: new Date() as Date,
+      selectedEndDate: new Date() as Date,
+      selectedOffices: [] as string[]
     };
   },
   methods: {
-    async loadStats() {
+    async loadStats(): Promise<void> {
       const startDateString = format(this.selectedDate, "yyyyMMdd");
       const endDateString = format(this.selectedEndDate, "yyyyMMdd");
       this.stats = await getStats(
@@ -84,19 +80,18 @@ export default Vue.extend({
         endDateString
       );
     },
-    async setSelectedEndDate(value: Date) {
+    setSelectedEndDate(value: Date): void {
       this.selectedEndDate = value;
     },
-    async setSelectedDate(value: Date) {
+    setSelectedDate(value: Date): void {
       this.selectedDate = value;
     },
-    onSelectOffices(offices) {
-      console.log("changed", offices);
+    onSelectOffices(offices: string[]): void {
       this.selectedOffices = offices;
     }
   },
   computed: {
-    span() {
+    span(): number {
       return (
         differenceInBusinessDays(this.selectedEndDate, this.selectedDate) + 1
       );
