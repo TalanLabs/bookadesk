@@ -51,51 +51,14 @@ export const getStats = async (
     const officesStats: OfficeStats[] = [];
     const userMap: Map<string, number> = new Map();
     for (const officeId of offices) {
-      const office: Office = await officeRepo.getOffice(officeId);
-      const officePlacesArray: Place[][] = await Promise.all(
-        office.floors.map(f => officeRepo.getFloorPlaces(f.id))
-      );
-      const officePlaces = [].concat(...officePlacesArray);
-      const bookings: Booking[] = await bookingRepo.getAllBookings(
+      const officeStats: OfficeStats = await getOfficeStats(
         officeId,
         startDate,
-        endDate
+        endDate,
+        userMap,
+        officeRepo,
+        bookingRepo
       );
-      bookings.forEach(b =>
-        userMap.set(b.email, (userMap.get(b.email) || 0) + 1)
-      );
-
-      const floorPlaces = groupBy(officePlaces, p => p.floorId);
-      const floorStatsMap: Map<string, FloorStats> = new Map();
-
-      for (const floor of office.floors) {
-        floorStatsMap.set(floor.id, {
-          bookingsNumber: 0,
-          floorName: floor.name,
-          floorId: floor.id,
-          placesNumber: Array.from(floorPlaces.get(floor.id) || []).length
-        });
-      }
-      for (const booking of bookings) {
-        const place: Place = officePlaces.find(p => p.id === booking.placeId);
-        if (!place) {
-          console.error("did not find place for booking", booking.id);
-          continue;
-        }
-        const floorStats = floorStatsMap.get(place.floorId);
-        floorStatsMap.set(place.floorId, {
-          ...floorStats,
-          bookingsNumber: floorStats.bookingsNumber + 1
-        });
-      }
-
-      const officeStats: OfficeStats = {
-        placesNumber: officePlaces.length,
-        bookingsNumber: bookings.length,
-        officeName: office.name,
-        officeId: officeId,
-        floors: Array.from(floorStatsMap.values())
-      };
       officesStats.push(officeStats);
     }
 
@@ -107,6 +70,7 @@ export const getStats = async (
       a.email.localeCompare(b.email)
     );
 
+    // Count total bookings and places
     const { bookings, places } = officesStats.reduce<StatsCount>(
       (previousValue, currentValue) => {
         return {
@@ -130,6 +94,65 @@ export const getStats = async (
     throw err;
   }
 };
+
+/**
+ * TODO userMap should be removed from here, we should sum user reservations somewhere else
+ * TODO clean this function...
+ */
+async function getOfficeStats(
+  officeId: string,
+  startDate: string,
+  endDate: string,
+  userMap: Map<string, number>,
+  officeRepo: OfficeRepo,
+  bookingRepo: BookingRepo
+): Promise<OfficeStats> {
+  const office: Office = await officeRepo.getOffice(officeId);
+
+  const officePlacesArray: Place[][] = await Promise.all(
+    office.floors.map(f => officeRepo.getFloorPlaces(f.id))
+  );
+  const officePlaces = [].concat(...officePlacesArray);
+
+  const bookings: Booking[] = await bookingRepo.getAllBookings(
+    officeId,
+    startDate,
+    endDate
+  );
+  bookings.forEach(b => userMap.set(b.email, (userMap.get(b.email) || 0) + 1));
+
+  const floorPlaces = groupBy(officePlaces, p => p.floorId);
+  const floorStatsMap: Map<string, FloorStats> = new Map();
+
+  for (const floor of office.floors) {
+    floorStatsMap.set(floor.id, {
+      bookingsNumber: 0,
+      floorName: floor.name,
+      floorId: floor.id,
+      placesNumber: Array.from(floorPlaces.get(floor.id) || []).length
+    });
+  }
+  for (const booking of bookings) {
+    const place: Place = officePlaces.find(p => p.id === booking.placeId);
+    if (!place) {
+      console.error("did not find place for booking", booking.id);
+      continue;
+    }
+    const floorStats = floorStatsMap.get(place.floorId);
+    floorStatsMap.set(place.floorId, {
+      ...floorStats,
+      bookingsNumber: floorStats.bookingsNumber + 1
+    });
+  }
+
+  return {
+    placesNumber: officePlaces.length,
+    bookingsNumber: bookings.length,
+    officeName: office.name,
+    officeId: officeId,
+    floors: Array.from(floorStatsMap.values())
+  };
+}
 
 function groupBy(list, keyGetter) {
   const map = new Map();
