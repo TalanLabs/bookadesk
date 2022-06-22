@@ -20,7 +20,7 @@ services:
 
   bookadesk:
     container_name: bookadesk
-    image:  public.ecr.aws/t6p3t0v4/talan-bookadesk:latest
+    image: talanlabsopen/talan-bookadesk:latest
     env_file:
       - bookadesk.env
     volumes:

@@ -34,9 +34,6 @@ export default {
   methods: {
     goHome() {
       this.$router.push({ name: "Home" });
-    },
-    goInfo() {
-      this.$router.push({ name: "Info" });
     }
   }
 };

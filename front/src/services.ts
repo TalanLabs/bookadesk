@@ -253,7 +253,9 @@ export const updateFloorName = async (
 };
 
 export interface BackendConfig {
+  keycloakUrl: string;
   keycloakRealm: string;
+  keycloakClientId: string;
   hidePlans: boolean;
 }
 

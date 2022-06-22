@@ -38,9 +38,9 @@ async function initializeKeycloak() {
   }
   config.hidePlans = backendConfig.hidePlans;
   const kcConfig: Keycloak.KeycloakConfig = {
-    url: `${config.keycloakUrl}`,
-    realm: backendConfig.keycloakRealm || "Talan",
-    clientId: "desk-booking-front"
+    url: backendConfig.keycloakUrl,
+    realm: backendConfig.keycloakRealm,
+    clientId: backendConfig.keycloakClientId
   };
 
   const keycloak = Keycloak(kcConfig);
