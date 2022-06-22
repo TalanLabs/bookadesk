@@ -35,7 +35,6 @@ export function sendCanceledBookingEmail(
     "dd/mm/yyyy"
   );
   emailGateway.sendEmail(
-    "bookadesk@talan.com",
     booking.email,
     `Your booking for ${messageDate} was canceled by admin`,
     `Hello,\n\nYour booking planned for ${messageDate} has been canceled by an administrator.\nContact your system administrator for more information.\n\nRegards,\nBookADesk`

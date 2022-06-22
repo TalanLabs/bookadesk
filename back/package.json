@@ -1,7 +1,7 @@
 {
   "name": "desk-booking-backend",
   "version": "1.4.0",
-  "description": "Backend of booking system for Talan offices (post COVID-19)",
+  "description": "Booking system backend",
   "main": "index.js",
   "scripts": {
     "prestart": "npx db-migrate up",

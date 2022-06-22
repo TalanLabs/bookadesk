@@ -56,7 +56,7 @@ describe("DeleteBooking", () => {
     try {
       await deleteBooking(
         booking.id,
-        "other-user@talan.com",
+        "other-user@example.com",
         false,
         bookingRepo,
         mockEmailGateway
@@ -76,7 +76,7 @@ describe("DeleteBooking", () => {
     // WHEN
     await deleteBooking(
       booking.id,
-      "admin-user@mail.com",
+      "admin-user@example.com",
       true,
       bookingRepo,
       mockEmailGateway

@@ -59,6 +59,7 @@ async function startApp() {
   if (process.env.SERVE_FRONT) {
     const frontPath = "../front/dist";
     app.use(serveStatic(frontPath));
+    console.info("Serving frontend");
   }
 
   app.use(express.json());
@@ -70,7 +71,9 @@ async function startApp() {
   });
   app.get("/api/config", (req, res) => {
     return res.status(200).send({
+      keycloakUrl: process.env.KEYCLOAK_URL,
       keycloakRealm: process.env.KEYCLOAK_REALM,
+      keycloakClientId: process.env.KEYCLOAK_CLIENT_ID,
       hidePlans: process.env.HIDE_PLANS == "true" || false
     });
   });
@@ -78,17 +81,15 @@ async function startApp() {
   app.use(morgan("tiny"));
 
   // Security
-  const realmPublicKey =
-    process.env.KEYCLOAK_REALM_PUBLIC_KEY ||
-    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnKq0+MnftyVe4ZfzIV2bk5L80dRTn3UIjayKhZuEBd77kNIzQgMAyUg35CQtxBpXmtLfqyyW3wXyD/qtrx2pyFx4l/x2JR4XKtq9SM9mRB30JZO9CFFlmzbTZ7xQuefk/mBqGEapau0ky04AwJoc9H2Yxuom96+8kYx9dEZmaBdTyHxppC3pS5jesLUsEDtmu9i0evxajZkf42iv63d+ONpLKx3wkmNFdkLI7uYiuaxKdoZNnkLMZr3iyvGw7C5kI7ubCp41MJcHhNyqERa84Ibl+xREwKhMj1bs5SlB18URPfJVZAs0RvlJZKbO4m9nHw4WNZ6Qu+xjESZCiQSkRQIDAQAB";
-  const realmName = process.env.KEYCLOAK_REALM || "Talan";
+  const realmPublicKey = process.env.KEYCLOAK_REALM_PUBLIC_KEY;
+  const realmName = process.env.KEYCLOAK_REALM;
 
   const memoryStore = new session.MemoryStore();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const kcConfig: any = {
     clientId: "desk-booking-back",
     bearerOnly: true,
-    serverUrl: "https://keycloak.ruche-labs.net/auth",
+    serverUrl: process.env.KEYCLOAK_URL,
     realm: realmName,
     realmPublicKey: realmPublicKey
   };
@@ -99,7 +100,7 @@ async function startApp() {
   const port = process.env.PORT || 8000;
   app.listen(port, () => {
     console.info(
-      `Talan desk booking app listening on port ${port}! Version ${version}`
+      `Desk booking app listening on port ${port}! Version ${version}`
     );
     process.on("SIGABRT", cleanTerminate);
     process.on("SIGINT", cleanTerminate);

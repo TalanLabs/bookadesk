@@ -5,7 +5,6 @@ import BookingConfirmation from "@/views/BookingConfirmation.vue";
 import BookingForm from "@/views/BookingForm.vue";
 import EditOffice from "@/views/EditOffice.vue";
 import EditPlaces from "@/views/EditPlaces.vue";
-import Info from "@/components/Info.vue";
 import Stats from "@/views/Stats.vue";
 import MissingSupplies from "@/views/MissingSupplies.vue";
 
@@ -21,11 +20,6 @@ const routes: Array<RouteConfig> = [
     path: "/booking",
     name: "Booking",
     component: BookingForm
-  },
-  {
-    path: "/info",
-    name: "Info",
-    component: Info
   },
   {
     path: "/stats",

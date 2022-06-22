@@ -1,9 +1,9 @@
 import { EmailGateway } from "../usecase/ports/EmailGateway";
 import nodemailer from "nodemailer";
+import config from "../config";
 
 export class NodemailerEmailGateway implements EmailGateway {
   async sendEmail(
-    sender: string,
     recipients: string,
     subject: string,
     body: string
@@ -29,7 +29,7 @@ export class NodemailerEmailGateway implements EmailGateway {
 
     // prepare mail info and content
     const mailOptions = {
-      from: sender,
+      from: config.emailFrom,
       to: recipients,
       subject: subject,
       text: body
@@ -38,9 +38,6 @@ export class NodemailerEmailGateway implements EmailGateway {
     // send email
     try {
       const info = await transporter.sendMail(mailOptions);
-      console.info(
-        `Email sent to ${recipients} by ${sender} with subject : ${subject}`
-      );
       return info;
     } catch (err) {
       console.error(`Error trying to send email to ${recipients} : ${err}`);
