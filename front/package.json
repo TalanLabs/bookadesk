@@ -43,9 +43,6 @@
     "vue-cli-plugin-tailwind": "~2.2.18",
     "vue-template-compiler": "^2.6.11"
   },
-  "overrides": {
-    "postcss": "^8.4.5"
-  },
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
