@@ -60,3 +60,8 @@ export interface ConnectedUser {
   email: string;
   isAdmin: boolean;
 }
+
+export interface Group {
+  id: string;
+  name: string;
+}
