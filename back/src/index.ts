@@ -28,6 +28,7 @@ import { BookingRepo } from "./usecase/ports/BookingRepo";
 import { OfficeRepo } from "./usecase/ports/OfficeRepo";
 import serveStatic from "serve-static";
 import { RealTimeProvider } from "./adapters/RealTimeProvider";
+import {PostgresGroupRepo} from "./adapters/PostgresGroupRepo";
 
 async function startApp() {
   dotenv.config();
@@ -135,6 +136,8 @@ async function startApp() {
     await checkDirectoryExists(filesPath);
     imageRepo = new FileImageRepo(filesPath);
   }
+  const groupRepo = new PostgresGroupRepo(pgClient);
+
   console.info("Repositories initialized");
 
   const emailGateway = new NodemailerEmailGateway();
@@ -148,6 +151,7 @@ async function startApp() {
     officeRepo,
     suppliesRepo,
     imageRepo,
+    groupRepo,
     emailGateway,
     timeProvider
   );
