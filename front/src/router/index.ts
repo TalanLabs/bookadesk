@@ -5,6 +5,7 @@ import BookingConfirmation from "@/views/BookingConfirmation.vue";
 import BookingForm from "@/views/BookingForm.vue";
 import EditOffice from "@/views/EditOffice.vue";
 import EditPlaces from "@/views/EditPlaces.vue";
+import EditGroups from "@/components/EditGroups.vue";
 import Info from "@/components/Info.vue";
 import Stats from "@/views/Stats.vue";
 import MissingSupplies from "@/views/MissingSupplies.vue";
@@ -36,6 +37,11 @@ const routes: Array<RouteConfig> = [
     path: "/edit",
     name: "EditOffice",
     component: EditOffice
+  },
+  {
+    path: "/groups",
+    name: "Groups",
+    component: EditGroups
   },
   {
     path: "/edit-places/:officeId/:floorId",
