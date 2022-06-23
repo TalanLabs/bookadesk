@@ -265,3 +265,13 @@ export const getBackendConfig = async (): Promise<BackendConfig | Error> => {
     return new Error("Unexpected error");
   }
 };
+
+export const createGroup = async (name: string): Promise<void | Error> => {
+  try {
+    await axios.post(`${apiUrl}/groups`, {
+      name
+    });
+  } catch (e) {
+    return new Error("Unexpected error");
+  }
+};
