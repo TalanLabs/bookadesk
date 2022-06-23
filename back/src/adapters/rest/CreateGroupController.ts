@@ -11,7 +11,7 @@ export function createGroupController(
         res: express.Response
     ): Promise<express.Response> => {
         try {
-            await createGroup(req.params.name, groupRepo);
+            await createGroup(req.body.name, groupRepo);
             return res.status(201).send();
         } catch (e) {
             return sendUnauthorizedError(e);
