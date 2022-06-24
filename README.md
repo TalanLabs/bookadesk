@@ -32,7 +32,7 @@ The backend will need a Postgres database named `bookadesk` to run.
 You can start one with the following docker command:
 
 ```bash
-docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=neuromonitor --name pg-bookadesk postgres:14
+docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=bookdadesk --name pg-bookadesk postgres:14
 ```
 
 ## Backend
