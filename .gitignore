@@ -159,6 +159,7 @@ typings/
 .env
 .env.test
 .env.local
+bookadesk.env
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
