@@ -41,7 +41,7 @@ export default new Vuex.Store<StateModel>({
     isUserAdmin: false,
     nextBooking: undefined,
     nextBookings: [],
-    selectedOfficeId: "dumont_durville",
+    selectedOfficeId: "",
     selectedDate: ""
   },
   getters: {
