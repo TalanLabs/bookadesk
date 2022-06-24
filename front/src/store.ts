@@ -11,7 +11,7 @@ import {
   getPlaces,
   saveOffices
 } from "@/services";
-import { Booking, BookingDetails, Floor, Office, Place } from "@/types";
+import { Booking, BookingDetails, Floor, Office, Place, Group } from "@/types";
 
 Vue.use(Vuex);
 
@@ -26,6 +26,7 @@ interface StateModel {
   nextBookings: Booking[];
   selectedOfficeId: string;
   selectedDate: string;
+  groups: Group[];
 }
 
 export default new Vuex.Store<StateModel>({
@@ -42,7 +43,8 @@ export default new Vuex.Store<StateModel>({
     nextBooking: undefined,
     nextBookings: [],
     selectedOfficeId: "dumont_durville",
-    selectedDate: ""
+    selectedDate: "",
+    groups: []
   },
   getters: {
     currentUser: state => {

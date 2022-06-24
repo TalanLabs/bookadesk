@@ -7,7 +7,8 @@ import {
   MissingSupply,
   Office,
   Place,
-  PlaceAlreadyBookedError
+  PlaceAlreadyBookedError,
+  Group
 } from "@/types";
 
 const apiUrl = config.apiUrl;
@@ -271,6 +272,15 @@ export const createGroup = async (name: string): Promise<void | Error> => {
     await axios.post(`${apiUrl}/groups`, {
       name
     });
+  } catch (e) {
+    return new Error("Unexpected error");
+  }
+};
+
+export const listGroups = async (): Promise<Group[] | Error> => {
+  try {
+    const res = await axios.get(`${apiUrl}/groups`);
+    return res.data;
   } catch (e) {
     return new Error("Unexpected error");
   }

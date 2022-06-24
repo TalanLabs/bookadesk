@@ -81,3 +81,8 @@ export interface MissingSupply {
   type: string;
   createdAt?: number;
 }
+
+export interface Group {
+  id: string;
+  name: string;
+}
