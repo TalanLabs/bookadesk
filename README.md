@@ -19,15 +19,31 @@ Create a *desk-booking-back* client, with type bearer-only
 
 Copy the realm name to the environment variable KEYCLOAK_REALM and the realm public key to KEYCLOAK_REALM_PUBLIC_KEY
 
-# Configuration - backend environment variables
+## Configuration - backend environment variables
 
 - HIDE_PLANS: do not show floor plans, hides the show/hide button too 
 
 # How to build and run locally
 
+## Database
+
+The backend will need a Postgres database named `bookadesk` to run.
+
+You can start one with the following docker command:
+
+```bash
+docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=neuromonitor --name pg-bookadesk postgres:14
+```
+
 ## Backend
 
+In `back` folder
+
 Create a `.env` file in `/back`, see `.env.example` file.
+Fill Keycloak variables
+
+Run `npm install`
+
 Run the backend with `npm start`
 
 ## Frontend (webapp)
