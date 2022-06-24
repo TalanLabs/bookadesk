@@ -28,7 +28,7 @@ import { BookingRepo } from "./usecase/ports/BookingRepo";
 import { OfficeRepo } from "./usecase/ports/OfficeRepo";
 import serveStatic from "serve-static";
 import { RealTimeProvider } from "./adapters/RealTimeProvider";
-import {PostgresGroupRepo} from "./adapters/PostgresGroupRepo";
+import { PostgresGroupRepo } from "./adapters/PostgresGroupRepo";
 
 async function startApp() {
   dotenv.config();
@@ -94,7 +94,7 @@ async function startApp() {
     realmPublicKey: realmPublicKey
   };
   const keycloak = new Keycloak({ store: memoryStore }, kcConfig);
-  app.use(keycloak.middleware());
+  // app.use(keycloak.middleware());
 
   // Server
   const port = process.env.PORT || 8000;

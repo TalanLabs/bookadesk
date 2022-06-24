@@ -36,9 +36,9 @@ import { updateFloorName } from "./usecase/updateFloorName";
 import { deletePlaceController } from "./adapters/rest/DeletePlaceController";
 import { TimeProvider } from "./usecase/ports/TimeProvider";
 import { nextBookingsController } from "./adapters/rest/NextBookingsController";
-import {createGroup} from "./usecase/CreateGroup";
-import {createGroupController} from "./adapters/rest/CreateGroupController";
-import {GroupRepo} from "./usecase/ports/GroupRepo";
+import { createGroupController } from "./adapters/rest/CreateGroupController";
+import { GroupRepo } from "./usecase/ports/GroupRepo";
+import { getListGroupsController } from "./adapters/rest/ListGroupsController";
 
 function updatePlacesController(officeRepo: OfficeRepo) {
   return async (req: AuthenticatedRequest, res) => {
@@ -472,10 +472,14 @@ export function createRoutes(
     updateFloorNameController(officeRepo)
   );
   router.post(
-      "/groups",
-      keycloak.protect(),
-      createGroupController(groupRepo)
+    "/groups",
+    // keycloak.protect(),
+    createGroupController(groupRepo)
   );
-
+  router.get(
+    "/groups",
+    // keycloak.protect(),
+    getListGroupsController(groupRepo)
+  );
   return router;
 }
