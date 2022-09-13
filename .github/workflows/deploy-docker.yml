@@ -33,6 +33,6 @@ jobs:
       - name: Build, tag, and push image to Docker Hub
         id: deploy-docker-hub
         run: |
-          docker build --build-arg current_version="${{ github.event.release.tag_name }}" -t talanlabsopen/talan-bookadesk:latest -t talanlabsopen/talan-bookadesk:${{ env.RELEASE_VERSION }} .
+          docker build --build-arg current_version="${{ github.event.release.tag_name }}" -t talanlabsopen/talan-bookadesk:latest -t talanlabsopen/talan-bookadesk:${{ github.event.release.tag_name }} .
           docker push talanlabsopen/talan-bookadesk:latest
-          docker push talanlabsopen/talan-bookadesk:${{ env.RELEASE_VERSION }}
+          docker push talanlabsopen/talan-bookadesk:${{ github.event.release.tag_name }}
